@@ -9,8 +9,8 @@ import { MdOutlineLocalParking } from "react-icons/md";
 
 export default function Facilities() {
   return (
-    <div className="w-[70%] mx-auto font-poppins max-md:w-[95%] py-20">
-      <h2 className="text-center text-5xl mb-20">Our Facilities</h2>
+    <div className="w-[70%] mx-auto font-poppins max-md:w-[95%] py-20 max-md:py-5">
+      <h2 className="text-center text-5xl mb-20 max-md:mb-5 max-md:text-3xl">Our Facilities</h2>
       <div className="grid grid-cols-4 gap-8 max-md:grid-cols-2 max-md:gap-2 ">
         <div className="text-[#7C6A46] text-center py-14 bg-[#f2eceb] rounded-lg max-md:py-7">
           <span className="flex justify-center text-6xl">

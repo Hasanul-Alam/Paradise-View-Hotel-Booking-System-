@@ -24,8 +24,9 @@ export default function Navbar() {
         {/* Center: Menu (hidden on mobile) */}
         <div className="hidden md:flex space-x-8">
           <a href="#home" className="hover:text-gray-900 transition">Home</a>
+          <a href="#home" className="hover:text-gray-900 transition">Explore</a>
+          <a href="#home" className="hover:text-gray-900 transition">Rooms</a>
           <a href="#about" className="hover:text-gray-900 transition">About</a>
-          <a href="#services" className="hover:text-gray-900 transition">Services</a>
           <a href="#contact" className="hover:text-gray-900 transition">Contact</a>
         </div>
 
@@ -62,8 +63,9 @@ export default function Navbar() {
         className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <a href="#home" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">Home</a>
+        <a href="#home" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">Explore</a>
+        <a href="#home" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">Rooms</a>
         <a href="#about" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">About</a>
-        <a href="#services" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">Services</a>
         <a href="#contact" className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center">Contact</a>
         <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
           Book Now

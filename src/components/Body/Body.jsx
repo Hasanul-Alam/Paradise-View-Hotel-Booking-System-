@@ -7,7 +7,7 @@ export default function Body() {
     <div className="w-[80%] mx-auto py-10 max-md:w-[95%]">
       <div className="grid grid-cols-4 gap-4 max-md:grid-cols-1">
         {/* Card */}
-        <div className="font-mulish mt-5 animate-slideIn">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -48,7 +48,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -89,7 +89,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -130,7 +130,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -171,7 +171,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -212,7 +212,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -253,7 +253,7 @@ export default function Body() {
             </div>
           </div>
         </div>
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img
@@ -296,7 +296,7 @@ export default function Body() {
         </div>
 
         {/* Main card here. */}
-        <div className="font-mulish mt-5">
+        <div className="font-mulish mt-5 animate-popup">
           {/* Card Image */}
           <div>
             <img

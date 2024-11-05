@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white text-black p-4 font-poppins">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="w-[80%] mx-auto flex items-center justify-between max-md:w-[95%]">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
           <a href="#">

@@ -1,8 +1,8 @@
 import { FaStar } from "react-icons/fa";
 export default function Testimonials() {
   return (
-    <div className="w-[75%] mx-auto py-10 max-md:w-[95%] font-raleway">
-      <h2 className="text-center text-5xl mb-20 max-md:mb-0 max-md:text-3xl">
+    <div className="w-[75%] mx-auto py-20 max-md:w-[95%] font-raleway">
+      <h2 className="text-center text-5xl mb-10 max-md:mb-0 max-md:text-3xl">
         Testimonials
       </h2>
       <div className="grid grid-cols-3 gap-4 justify-between items-center max-md:grid-cols-1">

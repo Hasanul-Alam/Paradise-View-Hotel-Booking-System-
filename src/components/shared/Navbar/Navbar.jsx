@@ -16,7 +16,7 @@ export default function Navbar() {
           <img
             src="https://i.ibb.co.com/ygyHMQQ/logo-2.png" // Replace with your logo
             alt="Logo"
-            className=""
+            className="max-md:w-[40px]"
           />
           </a>
         </div>

@@ -15,6 +15,8 @@ export default {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         mulish: ["Mulish", "sans-serif"],
+        raleway: ["Raleway", "sans-serif"],
+        dancing: ["Dancing Script", "cursive"],
       },
     },
   },

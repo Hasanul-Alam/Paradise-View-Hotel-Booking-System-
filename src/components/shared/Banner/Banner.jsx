@@ -10,7 +10,7 @@ const Banner = ({
 }) => {
   return (
     <div
-      className="relative bg-cover bg-center h-[95vh] max-md:h-[70%] py-10"
+      className="relative bg-cover bg-center h-[85vh] max-md:h-[70%] py-10"
       style={{
         backgroundImage: `url(${imageUrl})`,
       }}

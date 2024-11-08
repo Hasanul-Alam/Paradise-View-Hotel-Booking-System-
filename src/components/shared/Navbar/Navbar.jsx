@@ -57,8 +57,8 @@ export default function Navbar() {
   };
 
   return (
-    <div>
-      <nav className="bg-white text-black p-4 font-poppins sticky top-0 z-20">
+    <div className="sticky top-0 z-20">
+      <nav className="bg-white text-black p-4 font-poppins">
         <div className="w-[80%] mx-auto flex items-center justify-between max-md:w-[95%]">
           {/* Left: Logo */}
           <div className="flex-shrink-0">
@@ -162,12 +162,12 @@ export default function Navbar() {
           >
             Contact
           </Link>
-          <Link
-            to="/login"
+          <button 
+            onClick={openModal}
             className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center"
           >
             Login
-          </Link>
+          </button >
           <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
             Book Now
           </button>
@@ -182,7 +182,7 @@ export default function Navbar() {
           onClick={closeModal}
         >
           <div
-            className={`bg-white p-6 rounded-lg shadow-lg w-1/4 transform transition-transform duration-300 ease-out ${
+            className={`bg-white p-6 rounded-lg shadow-lg w-1/4 max-md:w-[90%] mx-auto transform transition-transform duration-300 ease-out ${
               isClosing ? "scale-90 opacity-0" : "scale-100 opacity-100"
             }`}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal

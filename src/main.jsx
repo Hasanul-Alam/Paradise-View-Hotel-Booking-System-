@@ -1,16 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Home from './components/Home/Home/Home';
-import Explore from './components/Explore/Explore/Explore';
-import Rooms from './components/Rooms/Rooms/Rooms';
-import About from './components/About/About/About';
-import Contact from './components/Contact/Contact/Contact';
-import NotFound from './components/NotFound/NotFound';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./components/Home/Home/Home";
+import Explore from "./components/Explore/Explore/Explore";
+import Rooms from "./components/Rooms/Rooms/Rooms";
+import About from "./components/About/About/About";
+import Contact from "./components/Contact/Contact/Contact";
+import NotFound from "./components/NotFound/NotFound";
+import { Provider } from "react-redux";
+import store from "./store/store";
+// import store from "./store";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +39,10 @@ const router = createBrowserRouter([
   },
 ]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-)
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
+);

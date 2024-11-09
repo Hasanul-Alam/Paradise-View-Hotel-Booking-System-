@@ -1,5 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+  logout,
+  registrationFailure,
+  registrationStart,
+  registrationSuccess,
+} from "../../../features/auth/authSlice";
+import { signInWithEmailAndPassword } from "firebase/auth/cordova";
+import { auth } from "../../../firebase/firebase.config";
+import {
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +27,77 @@ export default function Navbar() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isClosing, setIsClosing] = useState(false);
+  const { isLoggedIn, user, loading } = useSelector((state) => state.auth);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  // Listen to authentication state changes
+  useEffect(() => {
+    listenToAuthChanges(dispatch);
+  }, [dispatch]);
+
+  const listenToAuthChanges = (dispatch) => {
+    // This listens for changes in the authentication state (like login or logout)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Dispatch the user object to Redux on successful auth state change
+        dispatch(loginSuccess(user));
+        console.log("User logged in: ", user.displayName); // Display the user’s displayName in console
+      } else {
+        // Dispatch logout action if user is not authenticated
+        dispatch(logout());
+      }
+    });
+  };
+
+  // Handle login
+  const handleLogin = async () => {
+    dispatch(loginStart());
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential) {
+        // Dispatch login success with the user object
+        dispatch(loginSuccess(userCredential.user));
+      }
+    } catch (error) {
+      // Dispatch login failure if error occurs
+      dispatch(loginFailure(error.message));
+    }
+  };
+
+  // Handle registration
+  const handleRegistration = async () => {
+    dispatch(registrationStart()); // Start registration process
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential) {
+        // Update user profile with displayName
+        await updateProfile(userCredential.user, {
+          displayName: name, // Assuming 'name' is the user's chosen name
+        });
+        console.log("User profile updated with displayName");
+
+        // After updating the profile, dispatch registration success
+        dispatch(registrationSuccess(userCredential.user)); // Pass the user to Redux state
+      }
+    } catch (error) {
+      dispatch(registrationFailure(error.message)); // Dispatch registration failure
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    dispatch(logout());
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -17,52 +106,40 @@ export default function Navbar() {
   // Function to handle opening the modal
   const openModal = () => {
     setIsModalOpen(true);
-    setIsClosing(false); // Reset closing state when opening
+    setIsClosing(false);
   };
 
   // Function to handle closing the modal with animation
   const closeModal = () => {
-    setIsClosing(true); // Trigger closing animation
+    setIsClosing(true);
     setTimeout(() => {
       setIsModalOpen(false);
-      setIsLoginForm(true); // Reset to login form when modal is closed
-      setName(""); // Clear the name field when closing the modal
-    }, 1000); // Delay for animation duration
+      setIsLoginForm(true);
+      setName("");
+    }, 500);
   };
-
-  // const toggleModal = () => {
-  //   setTimeout(() => {
-  //     setIsModalOpen(!isModalOpen);
-  //     setIsLoginForm(true);
-  //     setName("");
-  //   }, 300);
-    
-  // };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (isLoginForm) {
-      // Handle login logic here
-      console.log("Login form submitted");
-      console.log("Email:", email);
-      console.log("Password:", password);
+      handleLogin();
     } else {
-      // Handle registration logic here
-      console.log("Registration form submitted");
-      console.log("Name:", name);
-      console.log("Email:", email);
-      console.log("Password:", password);
+      handleRegistration();
     }
-    closeModal(); // Close modal after submission (optional)
+    closeModal();
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
-    <div className="sticky top-0 z-20">
+    <div className="sticky top-0 z-20 relative">
       <nav className="bg-white text-black p-4 font-poppins">
         <div className="w-[80%] mx-auto flex items-center justify-between max-md:w-[95%]">
           {/* Left: Logo */}
           <div className="flex-shrink-0">
-            <Link to="#/">
+            <Link to="/">
               <img
                 src="https://i.ibb.co.com/ygyHMQQ/logo-2.png" // Replace with your logo
                 alt="Logo"
@@ -88,17 +165,71 @@ export default function Navbar() {
             <Link to="/contact" className="hover:text-gray-900 transition">
               Contact
             </Link>
-            <button
-              onClick={openModal}
-              className="hover:text-gray-900 transition"
-            >
-              Login
-            </button>
+
+            {/* User Dropdown */}
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="hover:text-gray-900 transition flex items-center"
+                >
+                  {user?.displayName}
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+                    <ul className="py-2 text-left">
+                      <li>
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={openModal}
+                className="hover:text-gray-900 transition"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* Right: Button */}
           <div className="hidden md:block">
-            <button className="bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 rounded-md transition text-white">
+            <button
+              onClick={() => console.log("Book Now clicked")}
+              className="bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 rounded-md transition text-white"
+            >
               Book Now
             </button>
           </div>
@@ -162,23 +293,22 @@ export default function Navbar() {
           >
             Contact
           </Link>
-          <button 
+          <button
             onClick={openModal}
             className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center"
           >
             Login
-          </button >
+          </button>
           <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
             Book Now
           </button>
         </div>
       </nav>
-      {/* Conditionally rendering modal */}
       {isModalOpen && (
         <div
-        className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-out ${
-          isClosing ? "opacity-0" : "opacity-100"
-        }`}
+          className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-out ${
+            isClosing ? "opacity-0" : "opacity-100"
+          }`}
           onClick={closeModal}
         >
           <div
@@ -193,7 +323,6 @@ export default function Navbar() {
 
             {/* Login/Registration Form */}
             <form onSubmit={handleFormSubmit}>
-              {/* Name Field (Only for Registration) */}
               {!isLoginForm && (
                 <div className="mb-4">
                   <label className="block text-left text-gray-700 mb-2">
@@ -209,7 +338,6 @@ export default function Navbar() {
                   />
                 </div>
               )}
-
               <div className="mb-4">
                 <label className="block text-left text-gray-700 mb-2">
                   Email
@@ -244,7 +372,6 @@ export default function Navbar() {
               </button>
             </form>
 
-            {/* Toggle between login and registration */}
             <button
               className="mt-4 w-full px-4 py-2 text-blue-500 hover:underline"
               onClick={() => setIsLoginForm(!isLoginForm)} // Toggle between forms
@@ -261,6 +388,13 @@ export default function Navbar() {
               Close
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Loading Spinner Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
         </div>
       )}
     </div>

@@ -10,12 +10,14 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100 font-raleway">
       {/* Sidebar for Desktop */}
       <aside className="bg-white w-full lg:w-64 shadow-lg hidden lg:block max-md:w-full">
-        <div className="p-6 bg-[#7C6A46] text-white">
-          <h1 className="text-2xl font-bold">Paradise View</h1>
-        </div>
+        <Link to="/">
+          <div className="p-6 bg-[#7C6A46] text-white">
+            <h1 className="text-2xl font-semibold font-raleway">Paradise View</h1>
+          </div>
+        </Link>
         <nav className="mt-8">
           <ul>
             <li className="px-6 py-3 hover:bg-indigo-50">

@@ -10,6 +10,12 @@ import Contact from "./components/Contact/Contact/Contact";
 import NotFound from "./components/NotFound/NotFound";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import UserProfile from "./components/UserProfile/UserProfile";
+import ProtectedRoute from "./components/routes/ProtectedRoute/ProtectedRoute";
+import Bookings from "./components/UserProfile/Bookings/Bookings";
+import PaymentMethod from "./components/UserProfile/PaymentMethod/PaymentMethod";
+import ProfileHome from "./components/UserProfile/ProfileHome/ProfileHome";
+import Reviews from "./components/UserProfile/ProfileSettings/Reviews";
 // import store from "./store";
 
 const router = createBrowserRouter([
@@ -32,6 +38,32 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact />,
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <UserProfile />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "/profile",
+        element: <ProfileHome />,
+      },
+      {
+        path: "reviews",
+        element: <Reviews />,
+      },
+      {
+        path: "bookings",
+        element: <Bookings />,
+      },
+      {
+        path: "paymentMethod",
+        element: <PaymentMethod />,
+      },
+    ],
   },
   {
     path: "*",

@@ -19,13 +19,13 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginSuccess: (state, action) => {
-      state.loading = false;
       state.isLoggedIn = true;
+      state.loading = false;
       state.user = action.payload;
     },
     registrationSuccess: (state, action) => {
-      state.loading = false;
       state.isLoggedIn = true;
+      state.loading = false;
       state.user = action.payload;
     },
     loginFailure: (state, action) => {

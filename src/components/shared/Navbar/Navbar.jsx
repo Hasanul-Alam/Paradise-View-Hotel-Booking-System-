@@ -38,6 +38,7 @@ export default function Navbar() {
   }, [dispatch]);
 
   const listenToAuthChanges = (dispatch) => {
+    dispatch(loginStart());
     // This listens for changes in the authentication state (like login or logout)
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -260,7 +261,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+            isOpen ? "h-[315px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <Link
@@ -293,12 +294,68 @@ export default function Navbar() {
           >
             Contact
           </Link>
-          <button
+          {/* User Dropdown */}
+          {isLoggedIn ? (
+              <div className="flex justify-center my-3">
+                <button
+                  onClick={toggleDropdown}
+                  className="hover:text-gray-900 transition flex items-center justify-center"
+                >
+                  {user?.displayName}
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+                    <ul className="py-2 text-left">
+                      <li>
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={openModal}
+                className="hover:text-gray-900 transition"
+              >
+                Login
+              </button>
+            )}
+          {/* <button
             onClick={openModal}
             className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center"
           >
             Login
-          </button>
+          </button> */}
           <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
             Book Now
           </button>

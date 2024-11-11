@@ -32,27 +32,41 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
 
-  // Listen to authentication state changes
   useEffect(() => {
-    listenToAuthChanges(dispatch);
-  }, [dispatch]);
+    const unsubscribe = listenToAuthChanges(dispatch);
+
+    return () => {
+      // Cleanup the listener when the component unmounts or on auth state change
+      unsubscribe();
+    };
+  }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
   const listenToAuthChanges = (dispatch) => {
+    // Dispatch loginStart only once to indicate the initial loading state
     dispatch(loginStart());
-    // This listens for changes in the authentication state (like login or logout)
-    onAuthStateChanged(auth, (user) => {
+
+    // Set up onAuthStateChanged listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Dispatch the user object to Redux on successful auth state change
-        dispatch(loginSuccess(user));
-        console.log(user)
-        console.log("User logged in: ", user.displayName); // Display the user’s displayName in console
+        // Create a serializable object with the necessary user data
+        const userData = {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        };
+
+        // Dispatch only the serializable user data
+        dispatch(loginSuccess(userData));
+        console.log("User logged in:", userData); // Log the serializable user data
       } else {
-        // Dispatch logout action if user is not authenticated
         dispatch(logout());
+        console.log("User logged out");
       }
     });
-  };
 
+    return unsubscribe;
+  };
   // Handle login
   const handleLogin = async () => {
     dispatch(loginStart());
@@ -134,7 +148,6 @@ export default function Navbar() {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-
   return (
     <div className="sticky top-0 z-20 relative">
       <nav className="bg-white text-black p-4 font-poppins">
@@ -297,60 +310,60 @@ export default function Navbar() {
           </Link>
           {/* User Dropdown */}
           {isLoggedIn ? (
-              <div className="flex justify-center my-3">
-                <button
-                  onClick={toggleDropdown}
-                  className="hover:text-gray-900 transition flex items-center justify-center"
-                >
-                  {user?.displayName}
-                  <svg
-                    className="w-4 h-4 ml-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {/* Dropdown Menu */}
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
-                    <ul className="py-2 text-left">
-                      <li>
-                        <Link
-                          to="/profile"
-                          className="block px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
-                        >
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
-                        >
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ) : (
+            <div className="flex justify-center my-3">
               <button
-                onClick={openModal}
-                className="hover:text-gray-900 transition"
+                onClick={toggleDropdown}
+                className="hover:text-gray-900 transition flex items-center justify-center"
               >
-                Login
+                {user?.displayName}
+                <svg
+                  className="w-4 h-4 ml-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </button>
-            )}
+
+              {/* Dropdown Menu */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+                  <ul className="py-2 text-left">
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 transition"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={openModal}
+              className="hover:text-gray-900 transition"
+            >
+              Login
+            </button>
+          )}
           {/* <button
             onClick={openModal}
             className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center"

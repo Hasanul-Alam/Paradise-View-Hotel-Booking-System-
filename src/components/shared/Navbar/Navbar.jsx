@@ -44,6 +44,7 @@ export default function Navbar() {
       if (user) {
         // Dispatch the user object to Redux on successful auth state change
         dispatch(loginSuccess(user));
+        console.log(user)
         console.log("User logged in: ", user.displayName); // Display the user’s displayName in console
       } else {
         // Dispatch logout action if user is not authenticated

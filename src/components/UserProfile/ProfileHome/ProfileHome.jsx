@@ -1,32 +1,67 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ProfileHome = () => {
-  const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profilePicture: 'https://via.placeholder.com/150', // Replace with dynamic profile image
-    location: 'New York, USA',
-    phone: '+1 234 567 890',
-    bio: 'Travel enthusiast, love exploring new places and experiencing different cultures.',
-  };
+  // const user = {
+  //   name: 'John Doe',
+  //   email: 'john.doe@example.com',
+  //   profilePicture: 'https://via.placeholder.com/150', // Replace with dynamic profile image
+  //   location: 'New York, USA',
+  //   phone: '+1 234 567 890',
+  //   bio: 'Travel enthusiast, love exploring new places and experiencing different cultures.',
+  // };
 
   const [bookings] = useState([
-    { id: 1, hotel: 'Green Valley Resort', checkIn: 'March 15, 2024', checkOut: 'March 20, 2024', status: 'Completed' },
-    { id: 2, hotel: 'Ocean Breeze Hotel', checkIn: 'May 10, 2024', checkOut: 'May 12, 2024', status: 'Upcoming' },
+    {
+      id: 1,
+      hotel: "Green Valley Resort",
+      checkIn: "March 15, 2024",
+      checkOut: "March 20, 2024",
+      status: "Completed",
+    },
+    {
+      id: 2,
+      hotel: "Ocean Breeze Hotel",
+      checkIn: "May 10, 2024",
+      checkOut: "May 12, 2024",
+      status: "Upcoming",
+    },
   ]);
 
   const [reviews] = useState([
-    { hotel: 'Green Valley Resort', rating: 4, comment: 'Great experience, wonderful staff and facilities.' },
-    { hotel: 'Ocean Breeze Hotel', rating: 5, comment: 'Absolutely amazing! Highly recommend.' },
+    {
+      hotel: "Green Valley Resort",
+      rating: 4,
+      comment: "Great experience, wonderful staff and facilities.",
+    },
+    {
+      hotel: "Ocean Breeze Hotel",
+      rating: 5,
+      comment: "Absolutely amazing! Highly recommend.",
+    },
   ]);
 
   const handleEditProfile = () => {
-    alert('Edit Profile functionality coming soon!');
+    alert("Edit Profile functionality coming soon!");
   };
 
   const handleLogout = () => {
-    alert('Logging out...');
+    alert("Logging out...");
   };
+
+  const { user, loading } = useSelector((state) => state.auth);
+
+  if (loading) {
+    return (
+      <>
+        <div className="min-h-screen flex justify-center items-center">
+          <h2 className="text-3xl text-center">Loading...</h2>
+        </div>
+      </>
+    ); // Show a loading spinner or any loading UI while checking the auth status
+  }
+
+  console.log('Error: ', user)
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
@@ -35,7 +70,7 @@ const ProfileHome = () => {
         <div className="relative h-64 bg-gradient-to-r from-[#9da628] to-[#884d24]">
           <div className="absolute bottom-[-50px] left-4 sm:left-8">
             <img
-              src={user.profilePicture}
+              src="https://i.ibb.co.com/7kVs2rF/DALL-E-2024-11-06-19-59-40-A-portrait-of-a-person-with-equal-height-and-width-centered-in-a-vibrant.webp"
               alt="Profile"
               className="h-36 w-36 rounded-full border-4 border-white shadow-lg"
             />
@@ -46,9 +81,13 @@ const ProfileHome = () => {
         <div className="pt-16 sm:pt-20 px-6 sm:px-8">
           <div className="sm:flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-3xl font-semibold text-gray-800">{user.name}</h2>
-              <p className="text-lg text-gray-500">{user.email}</p>
-              <p className="text-sm text-gray-400">{user.location}</p>
+              <h2 className="text-3xl font-semibold text-gray-800">
+                {user.displayName}
+              </h2>
+              <p className="text-lg text-gray-500">
+                {user.email}
+              </p>
+              <p className="text-sm text-gray-400">{"Molla Bari"}</p>
             </div>
             <div className="mt-4 sm:mt-0 flex space-x-4">
               <button
@@ -68,18 +107,31 @@ const ProfileHome = () => {
 
           {/* Upcoming Bookings Section */}
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Upcoming Bookings</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Upcoming Bookings
+            </h3>
             <div className="space-y-4">
               {bookings
-                .filter((booking) => booking.status === 'Upcoming')
+                .filter((booking) => booking.status === "Upcoming")
                 .map((booking) => (
-                  <div key={booking.id} className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center">
+                  <div
+                    key={booking.id}
+                    className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center"
+                  >
                     <div>
-                      <p className="text-lg font-medium text-gray-700">{booking.hotel}</p>
-                      <p className="text-sm text-gray-500">Check-in: {booking.checkIn}</p>
-                      <p className="text-sm text-gray-500">Check-out: {booking.checkOut}</p>
+                      <p className="text-lg font-medium text-gray-700">
+                        {booking.hotel}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Check-in: {booking.checkIn}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Check-out: {booking.checkOut}
+                      </p>
                     </div>
-                    <span className="text-sm font-medium text-yellow-500">Upcoming</span>
+                    <span className="text-sm font-medium text-yellow-500">
+                      Upcoming
+                    </span>
                   </div>
                 ))}
             </div>
@@ -87,18 +139,31 @@ const ProfileHome = () => {
 
           {/* Booking History Section */}
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Booking History</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Booking History
+            </h3>
             <div className="space-y-4">
               {bookings.map((booking) => (
-                <div key={booking.id} className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center">
+                <div
+                  key={booking.id}
+                  className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center"
+                >
                   <div>
-                    <p className="text-lg font-medium text-gray-700">{booking.hotel}</p>
-                    <p className="text-sm text-gray-500">Check-in: {booking.checkIn}</p>
-                    <p className="text-sm text-gray-500">Check-out: {booking.checkOut}</p>
+                    <p className="text-lg font-medium text-gray-700">
+                      {booking.hotel}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Check-in: {booking.checkIn}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Check-out: {booking.checkOut}
+                    </p>
                   </div>
                   <span
                     className={`text-sm font-medium ${
-                      booking.status === 'Completed' ? 'text-green-600' : 'text-yellow-500'
+                      booking.status === "Completed"
+                        ? "text-green-600"
+                        : "text-yellow-500"
                     }`}
                   >
                     {booking.status}
@@ -108,15 +173,20 @@ const ProfileHome = () => {
             </div>
           </div>
 
-          
-
           {/* Reviews Section */}
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Reviews</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Reviews
+            </h3>
             <div className="space-y-4">
               {reviews.map((review, index) => (
-                <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                  <p className="text-lg font-medium text-gray-700">{review.hotel}</p>
+                <div
+                  key={index}
+                  className="bg-gray-50 p-4 rounded-lg shadow-sm"
+                >
+                  <p className="text-lg font-medium text-gray-700">
+                    {review.hotel}
+                  </p>
                   <p className="text-sm text-gray-500">{review.comment}</p>
                   <div className="flex items-center mt-2">
                     {[...Array(5)].map((_, i) => (
@@ -125,7 +195,7 @@ const ProfileHome = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
                         height="20"
-                        fill={i < review.rating ? 'yellow' : 'gray'}
+                        fill={i < review.rating ? "yellow" : "gray"}
                         viewBox="0 0 20 20"
                       >
                         <path d="M10 15l-5 3 1-5-4-4 5-1L10 0l2 6 5 1-4 4 1 5-5-3z" />

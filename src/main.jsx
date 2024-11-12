@@ -17,6 +17,12 @@ import PaymentMethod from "./components/UserProfile/PaymentMethod/PaymentMethod"
 import ProfileHome from "./components/UserProfile/ProfileHome/ProfileHome";
 import Reviews from "./components/UserProfile/ProfileSettings/Reviews";
 import { PersistGate } from "redux-persist/integration/react";
+import Admin from "./components/admin/Admin/Admin";
+import AdminHome from "./components/admin/AdminHome/AdminHome";
+import Users from "./components/admin/Users/Users";
+import ManageRooms from "./components/admin/ManageRooms/ManageRooms";
+import ManageBookings from "./components/admin/ManageBookings/ManageBookings";
+import Newsletters from "./components/admin/Newsletters/Newsletters";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +45,34 @@ const router = createBrowserRouter([
     path: "/contact",
     element: <Contact />,
   },
+  // Admin Routes Starts Here....
+  {
+    path: "/admin",
+    element: <Admin />,
+    children: [
+      {
+        path: "/admin",
+        element: <AdminHome />,
+      },
+      {
+        path: "users",
+        element: <Users />,
+      },
+      {
+        path: "manage-rooms",
+        element: <ManageRooms />,
+      },
+      {
+        path: "manage-bookings",
+        element: <ManageBookings />,
+      },
+      {
+        path: "newsletters",
+        element: <Newsletters />,
+      },
+    ]
+  },
+  // Admin Routes Ends Here....
   {
     path: "/profile",
     element: (

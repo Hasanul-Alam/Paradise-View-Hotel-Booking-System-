@@ -235,12 +235,14 @@ export default function Navbar() {
 
           {/* Right: Button */}
           <div className="hidden md:block">
-            <button
-              onClick={() => console.log("Book Now clicked")}
-              className="bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 rounded-md transition text-white"
-            >
-              Admin
-            </button>
+            <Link to="/admin">
+              <button
+                onClick={() => console.log("Book Now clicked")}
+                className="bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 rounded-md transition text-white"
+              >
+                Admin
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}

@@ -42,29 +42,17 @@ export default function Navbar() {
   }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
   const listenToAuthChanges = (dispatch) => {
-    // Dispatch loginStart only once to indicate the initial loading state
-    dispatch(loginStart());
-
-    // Set up onAuthStateChanged listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Create a serializable object with the necessary user data
         const userData = {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
           photoURL: user.photoURL,
         };
-
-        // Dispatch only the serializable user data
-        dispatch(loginSuccess(userData));
-        console.log("User logged in:", userData); // Log the serializable user data
-      } else {
-        dispatch(logout());
-        console.log("User logged out");
+        dispatch(loginSuccess(userData)); // Only dispatch the user data
       }
     });
-
     return unsubscribe;
   };
   // Handle login
@@ -77,8 +65,14 @@ export default function Navbar() {
         password
       );
       if (userCredential) {
+        const userData = {
+          uid: userCredential.user.uid,
+          displayName: userCredential.user.displayName,
+          email: userCredential.user.email,
+          photoURL: userCredential.user.photoURL,
+        };
         // Dispatch login success with the user object
-        dispatch(loginSuccess(userCredential.user));
+        dispatch(loginSuccess(userData));
       }
     } catch (error) {
       // Dispatch login failure if error occurs

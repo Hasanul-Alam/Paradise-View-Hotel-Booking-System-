@@ -51,6 +51,6 @@ export const {
   registrationFailure,
   loginSuccess,
   loginFailure,
-  logout,
+  logout
 } = authSlice.actions;
 export default authSlice.reducer;

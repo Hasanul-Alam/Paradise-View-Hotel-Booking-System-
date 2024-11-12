@@ -9,7 +9,7 @@ import About from "./components/About/About/About";
 import Contact from "./components/Contact/Contact/Contact";
 import NotFound from "./components/NotFound/NotFound";
 import { Provider } from "react-redux";
-import store, { persistor } from './store/store';
+import store, { persistor } from "./store/store";
 import UserProfile from "./components/UserProfile/UserProfile";
 import ProtectedRoute from "./components/routes/ProtectedRoute/ProtectedRoute";
 import Bookings from "./components/UserProfile/Bookings/Bookings";
@@ -17,7 +17,6 @@ import PaymentMethod from "./components/UserProfile/PaymentMethod/PaymentMethod"
 import ProfileHome from "./components/UserProfile/ProfileHome/ProfileHome";
 import Reviews from "./components/UserProfile/ProfileSettings/Reviews";
 import { PersistGate } from "redux-persist/integration/react";
-// import store from "./store";
 
 const router = createBrowserRouter([
   {

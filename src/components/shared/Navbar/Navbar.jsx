@@ -186,20 +186,20 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
-                  className="hover:text-gray-900 transition flex items-center"
+                  className="hover:text-gray-900 transition flex items-center font-semibold text-[#00403a]"
                 >
                   {user?.displayName}
                   <svg
                     className="w-4 h-4 ml-1"
                     fill="none"
-                    stroke="currentColor"
+                    stroke="#00403a"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth="2"
+                      strokeWidth="4"
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -245,7 +245,7 @@ export default function Navbar() {
               onClick={() => console.log("Book Now clicked")}
               className="bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 rounded-md transition text-white"
             >
-              Book Now
+              Admin
             </button>
           </div>
 

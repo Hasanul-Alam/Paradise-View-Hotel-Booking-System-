@@ -1,12 +1,21 @@
+import axios from "axios";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+
+import { loadingStart, loadingEnd } from "../../../features/auth/authSlice";
 
 export default function Reviews() {
   const [rating, setRating] = useState(0);
   const [givenRating, setGivenRating] = useState(3);
   const [hoverRating, setHoverRating] = useState(0);
-  const [name, setName] = useState('')
-  const [apartmentName, setApartmentName] = useState('')
-  const [review, setReview] = useState('')
+  const [name, setName] = useState("");
+  const [apartmentName, setApartmentName] = useState("");
+  const [review, setReview] = useState("");
+
+  const { user, loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   // Handle when a star is clicked
   const handleClick = (value) => {
@@ -25,18 +34,38 @@ export default function Reviews() {
 
   // Clear form Function
   const clearForm = () => {
-    setApartmentName('');
-    setName('');
-    setReview('');
-    setRating(0)
-  }
+    setApartmentName("");
+    setName("");
+    setReview("");
+    setRating(0);
+  };
 
   // Handle review form submit
-  const handleReviewSubmit = (e) => {
-    e.preventDefault(); // Stops reloading when submit
-    console.log(apartmentName, name, review, rating)
-    clearForm();
-  }
+  const handleReviewSubmit = async (e) => {
+    let defaultRating;
+    rating === 0 ? (defaultRating = 5) : (defaultRating = rating);
+    dispatch(loadingStart());
+    e.preventDefault();
+    const data = {
+      apartmentName,
+      name,
+      review,
+      rating: defaultRating,
+      userImage: user.photoURL,
+    };
+    const response = await axios.post(`http://localhost:3000/reviews`, data);
+    if (response.data.insertedId) {
+      setTimeout(() => {
+        dispatch(loadingEnd());
+        Swal.fire({
+          title: "Review Submitted",
+          text: "Your constructive opinion has been submitted successfully.",
+          icon: "success",
+        });
+        clearForm();
+      }, 800);
+    }
+  };
   return (
     <div className="w-[80%] mx-auto max-md:w-[95%] py-10">
       {/* Review form */}
@@ -80,11 +109,11 @@ export default function Reviews() {
             </label>
             <input
               readOnly
-              value={"hasanul.alam.professional@gmail.com"}
+              value={user.email}
               type="text"
               id="email"
               placeholder="Apartment"
-              className="px-5 py-2 border border-gray-500 rounded w-full my-2 text-gray-400 focus:outline-none"
+              className="px-5 py-2 border border-gray-500 rounded w-full my-2 text-slate-800 font-semibold focus:outline-none"
             />
           </div>
           {/* Review */}
@@ -231,6 +260,12 @@ export default function Reviews() {
           </div>
         </div>
       </div>
+      {/* Spinner */}
+      {loading && (
+        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 z-50 w-full h-[100%]">
+          <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 }

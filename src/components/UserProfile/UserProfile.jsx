@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
 export default function UserProfile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { loading } = useSelector((state) => state.auth);
 
   //toggle mobile menu
   const toggleMenu = () => {
@@ -154,12 +152,6 @@ export default function UserProfile() {
       <main className="flex-1 p-6 max-md:p-0">
         <Outlet />
       </main>
-      {/* Loading Spinner Overlay */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
-        </div>
-      )}
     </div>
   );
 }

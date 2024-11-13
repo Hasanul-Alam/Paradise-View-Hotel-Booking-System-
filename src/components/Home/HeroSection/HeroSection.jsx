@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 export default function HeroSection() {
@@ -10,6 +11,7 @@ export default function HeroSection() {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const today = new Date().toISOString().split("T")[0];
+  const { user } = useSelector((state) => state.auth);
 
   // API Base URL
   const apiUrl = "http://localhost:3000"; // Use your actual backend URL
@@ -76,12 +78,13 @@ export default function HeroSection() {
           // Make a booking request
           try {
             const bookingResponse = await axios.post(`${apiUrl}/book-room`, {
-              email: "hasanulalam420@gmail.com", // Can use user email dynamically
+              email: user.email,
               roomType,
               roomsBooked: rooms,
               numOfPersons: person,
               startDate: checkInDate,
               endDate: checkOutDate,
+              status: "Pending",
             });
 
             if (bookingResponse.data.success) {
@@ -124,9 +127,7 @@ export default function HeroSection() {
             Every moment feels like the first time <br /> in paradise view
           </p>
           <div className="flex gap-4 items-center mt-6 max-md:justify-center">
-            <button
-              className="bg-[#7C6A46] text-white px-3 py-2 rounded hover:bg-[#8C6B27]"
-            >
+            <button className="bg-[#7C6A46] text-white px-3 py-2 rounded hover:bg-[#8C6B27]">
               Book Now
             </button>
             <button className="bg-[#00A699] p-4 rounded-full text-white">

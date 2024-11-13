@@ -42,6 +42,12 @@ const authSlice = createSlice({
     imageUploadSuccess: (state) => {
       state.loading = false;
     },
+    loadingStart: (state) => {
+      state.loading = true;
+    },
+    loadingEnd: (state) => {
+      state.loading = false;
+    },
     logout: (state) => {
       state.loading = false;
       state.isLoggedIn = false;
@@ -57,6 +63,8 @@ export const {
   registrationFailure,
   loginSuccess,
   loginFailure,
+  loadingStart,
+  loadingEnd,
   logout
 } = authSlice.actions;
 export default authSlice.reducer;

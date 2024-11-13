@@ -15,7 +15,7 @@ import ProtectedRoute from "./components/routes/ProtectedRoute/ProtectedRoute";
 import Bookings from "./components/UserProfile/Bookings/Bookings";
 import PaymentMethod from "./components/UserProfile/PaymentMethod/PaymentMethod";
 import ProfileHome from "./components/UserProfile/ProfileHome/ProfileHome";
-import Reviews from "./components/UserProfile/ProfileSettings/Reviews";
+import Reviews from "./components/UserProfile/Reviews.jsx/Reviews";
 import { PersistGate } from "redux-persist/integration/react";
 import Admin from "./components/admin/Admin/Admin";
 import AdminHome from "./components/admin/AdminHome/AdminHome";

@@ -9,6 +9,7 @@ import {
   registrationFailure,
   registrationStart,
   registrationSuccess,
+  loadingStart
 } from "../../../features/auth/authSlice";
 import { signInWithEmailAndPassword } from "firebase/auth/cordova";
 import { auth } from "../../../firebase/firebase.config";
@@ -45,6 +46,7 @@ export default function Navbar() {
   }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
   const listenToAuthChanges = (dispatch) => {
+    dispatch(loadingStart());
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userData = {

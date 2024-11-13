@@ -8,7 +8,12 @@ export default function ProtectedRoute({ children }) {
 
   // Show a loading spinner or any loading UI while loading is true
   if (loading) {
-    return <div>Loading...</div>; // Replace with your spinner component
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        {/* Spinner */}
+        <div className="w-16 h-16 border-4 border-solid border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   // Once loading is done, if the user is not logged in, redirect

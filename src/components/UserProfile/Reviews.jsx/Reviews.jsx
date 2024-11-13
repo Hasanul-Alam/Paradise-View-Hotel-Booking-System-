@@ -1,18 +1,42 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 
 import { loadingStart, loadingEnd } from "../../../features/auth/authSlice";
+import PropTypes from "prop-types";
+
+const StarRating = ({ rating }) => {
+  return (
+    <div className="flex space-x-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <svg
+          key={star}
+          className={`w-6 h-6 ${
+            rating >= star ? "text-yellow-500" : "text-gray-300"
+          }`}
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+        </svg>
+      ))}
+    </div>
+  );
+};
+// Define propTypes for StarRating to avoid typescript warning
+StarRating.propTypes = {
+  rating: PropTypes.number.isRequired, // rating should be a number and is required
+};
 
 export default function Reviews() {
   const [rating, setRating] = useState(0);
-  const [givenRating, setGivenRating] = useState(3);
   const [hoverRating, setHoverRating] = useState(0);
   const [name, setName] = useState("");
   const [apartmentName, setApartmentName] = useState("");
   const [review, setReview] = useState("");
+  const [reviewData, setReviewData] = useState([]);
 
   const { user, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -52,6 +76,7 @@ export default function Reviews() {
       review,
       rating: defaultRating,
       userImage: user.photoURL,
+      email: user.email,
     };
     const response = await axios.post(`http://localhost:3000/reviews`, data);
     if (response.data.insertedId) {
@@ -63,9 +88,22 @@ export default function Reviews() {
           icon: "success",
         });
         clearForm();
+        getReviews();
       }, 800);
     }
   };
+
+  const getReviews = () => {
+    axios.get(`http://localhost:3000/reviews/${user.email}`).then((res) => {
+      if (res.data) {
+        setReviewData(res.data);
+      }
+    });
+    console.log(reviewData);
+  };
+  useEffect(() => {
+    getReviews();
+  }, []);
   return (
     <div className="w-[80%] mx-auto max-md:w-[95%] py-10">
       {/* Review form */}
@@ -187,78 +225,21 @@ export default function Reviews() {
         {/* Heading */}
         <div className="flex justify-center mb-10">
           <span className="text-4xl font-semibold text-center py-3 border-b-2 border-black px-5 max-md:text-3xl max-md:px-2 max-md:border-b-1">
-            Previous Reviews
+            Your Reviews
           </span>
         </div>
-        {/* Review Card */}
-        <div className="bg-slate-200 px-8 py-4 rounded-lg my-5 max-md:py-3 max-md:px-3">
-          <h2 className="text-xl font-semibold">Greeen Valy Resort</h2>
-          <p className="text-sm my-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia sed
-            aspernatur dicta exercitationem modi inventore, praesentium
-            voluptatem quia earum nulla?
-          </p>
-          <div className="flex space-x-1">
-            {Array.from({ length: 5 }, (star, index) => (
-              <svg
-                key={index}
-                className={`w-6 h-6 ${
-                  index < givenRating ? "text-yellow-500" : "text-gray-300"
-                }`}
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-            ))}
+        {reviewData.map((item) => (
+          <div
+            key={item._id}
+            className="bg-slate-200 px-8 py-4 rounded-lg my-5 max-md:py-3 max-md:px-3"
+          >
+            <h2 className="text-xl font-semibold">{item.apartmentName}</h2>
+            <p className="text-sm my-2">{item.review}</p>
+            <div className="flex space-x-1">
+              <StarRating rating={item.rating} />
+            </div>
           </div>
-        </div>
-        {/* Review Card */}
-        <div className="bg-slate-200 px-8 py-4 rounded-lg my-5">
-          <h2 className="text-xl font-semibold">Greeen Valy Resort</h2>
-          <p className="text-sm my-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia sed
-            aspernatur dicta exercitationem modi inventore, praesentium
-            voluptatem quia earum nulla?
-          </p>
-          <div className="flex space-x-1">
-            {Array.from({ length: 5 }, (star, index) => (
-              <svg
-                key={index}
-                className={`w-6 h-6 ${
-                  index < givenRating ? "text-yellow-500" : "text-gray-300"
-                }`}
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-            ))}
-          </div>
-        </div>
-        {/* Review Card */}
-        <div className="bg-slate-200 px-8 py-4 rounded-lg my-5">
-          <h2 className="text-xl font-semibold">Greeen Valy Resort</h2>
-          <p className="text-sm my-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia sed
-            aspernatur dicta exercitationem modi inventore, praesentium
-            voluptatem quia earum nulla?
-          </p>
-          <div className="flex space-x-1">
-            {Array.from({ length: 5 }, (star, index) => (
-              <svg
-                key={index}
-                className={`w-6 h-6 ${
-                  index < givenRating ? "text-yellow-500" : "text-gray-300"
-                }`}
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
       {/* Spinner */}
       {loading && (

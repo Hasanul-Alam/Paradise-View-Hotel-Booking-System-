@@ -18,6 +18,8 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +31,7 @@ export default function Navbar() {
   const [isClosing, setIsClosing] = useState(false);
   const { isLoggedIn, user, loading } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [image, setImage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -84,20 +87,34 @@ export default function Navbar() {
   const handleRegistration = async () => {
     dispatch(registrationStart()); // Start registration process
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      if (userCredential) {
-        // Update user profile with displayName
-        await updateProfile(userCredential.user, {
-          displayName: name, // Assuming 'name' is the user's chosen name
-        });
-        console.log("User profile updated with displayName");
+      const imageUrl = await uploadImageToImgbb(image);
+      if (imageUrl) {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        if (userCredential) {
+          // Update user profile with displayName
+          await updateProfile(userCredential.user, {
+            displayName: name,
+            photoURL: imageUrl,
+          });
+          console.log(
+            "User profile updated with displayName and photoURL",
+            userCredential.user
+          );
 
-        // After updating the profile, dispatch registration success
-        dispatch(registrationSuccess(userCredential.user)); // Pass the user to Redux state
+          const userData = {
+            uid: userCredential.user.uid,
+            displayName: userCredential.user.displayName,
+            email: userCredential.user.email,
+            photoURL: userCredential.user.photoURL,
+          };
+          await uploadUserData(userData);
+          // After updating the profile, dispatch registration success
+          dispatch(registrationSuccess(userData));
+        }
       }
     } catch (error) {
       dispatch(registrationFailure(error.message)); // Dispatch registration failure
@@ -107,6 +124,52 @@ export default function Navbar() {
   const handleLogout = async () => {
     await signOut(auth);
     dispatch(logout());
+  };
+
+  // Handle image selection
+  const handleImageSelect = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  // Upload image to imgbb
+  const uploadImageToImgbb = async (imageFile) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    try {
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=a034eb9194a3961792dc743224e30bd2`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      return data.data.url;
+    } catch (error) {
+      console.error("Error uploading image to imgbb:", error);
+      throw new Error("Image upload failed");
+    }
+  };
+
+  // Upload user data to database
+  const uploadUserData = async (user) => {
+    const response = await axios.post(`http://localhost:3000/users`, user);
+    if (response.data.insertedId) {
+      Swal.fire({
+        title: "Success!",
+        text: "You have been successfully registered!",
+        icon: "success",
+        confirmButtonText: "Awesome!",
+        confirmButtonColor: "#4CAF50",
+        backdrop: `
+      rgba(0,0,123,0.4)
+    `,
+        customClass: {
+          popup: "animated-sparkle", // Applying custom animation class
+        },
+      });
+    }
   };
 
   const toggleMenu = () => {
@@ -360,12 +423,6 @@ export default function Navbar() {
               Login
             </button>
           )}
-          {/* <button
-            onClick={openModal}
-            className="block px-2 py-2 hover:bg-gray-700 transition w-full text-center"
-          >
-            Login
-          </button> */}
           <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
             Book Now
           </button>
@@ -379,80 +436,132 @@ export default function Navbar() {
           onClick={closeModal}
         >
           <div
-            className={`bg-white p-6 rounded-lg shadow-lg w-1/4 max-md:w-[90%] mx-auto transform transition-transform duration-300 ease-out ${
+            className={`relative bg-white p-8 rounded-xl shadow-2xl ${
+              !isLoginForm ? "w-1/3" : "w-1/4"
+            } max-md:w-[90%] mx-auto transform transition-transform duration-300 ease-out ${
               isClosing ? "scale-90 opacity-0" : "scale-100 opacity-100"
             }`}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-            <h2 className="text-xl font-bold mb-4 text-center">
+            {/* Close button in the top-right corner */}
+            <button
+              className="absolute top-4 right-4 text-blue-500 hover:text-red-500 transition-colors"
+              onClick={closeModal}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <h2 className="text-2xl font-extrabold mb-6 text-center text-gray-800">
               {isLoginForm ? "Login" : "Sign Up"}
             </h2>
 
             {/* Login/Registration Form */}
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleFormSubmit} className="space-y-6">
               {!isLoginForm && (
-                <div className="mb-4">
-                  <label className="block text-left text-gray-700 mb-2">
+                <div>
+                  <label className="block text-left text-gray-600 font-semibold mb-2">
                     Name
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-300 hover:ring-2 hover:ring-blue-200"
                     placeholder="Enter your name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)} // Update name state
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
               )}
-              <div className="mb-4">
-                <label className="block text-left text-gray-700 mb-2">
+              <div>
+                <label className="block text-left text-gray-600 font-semibold mb-2">
                   Email
                 </label>
                 <input
                   type="email"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-300 hover:ring-2 hover:ring-blue-200"
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)} // Update email state
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-left text-gray-700 mb-2">
+              <div>
+                <label className="block text-left text-gray-600 font-semibold mb-2">
                   Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-300 hover:ring-2 hover:ring-blue-200"
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // Update password state
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
+              {!isLoginForm && (
+                <div>
+                  <label className="block text-left text-gray-600 font-semibold mb-2">
+                    Image
+                  </label>
+                  <div className="relative group">
+                    <input
+                      type="file"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 hover:ring-2 hover:ring-blue-200"
+                      placeholder="Upload an image"
+                      onChange={(e) => handleImageSelect(e)}
+                      required
+                    />
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <svg
+                        className="h-5 w-5 text-blue-500 group-hover:text-blue-700 transition duration-300 ease-in-out"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 12v.01M6.938 4.938l-.866.866a2 2 0 000 2.828l7.07 7.07a2 2 0 002.829 0l.865-.865a2 2 0 000-2.828l-7.07-7.07a2 2 0 00-2.828 0z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Choose an image to upload
+                  </p>
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                className="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
               >
                 {isLoginForm ? "Login" : "Sign Up"}
               </button>
             </form>
 
             <button
-              className="mt-4 w-full px-4 py-2 text-blue-500 hover:underline"
+              className="mt-6 w-full px-4 py-3 text-blue-600 font-semibold hover:underline transition-colors"
               onClick={() => setIsLoginForm(!isLoginForm)} // Toggle between forms
             >
               {isLoginForm
                 ? "Don't have an account? Register"
                 : "Already have an account? Login"}
-            </button>
-
-            <button
-              className="mt-4 w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-              onClick={closeModal}
-            >
-              Close
             </button>
           </div>
         </div>

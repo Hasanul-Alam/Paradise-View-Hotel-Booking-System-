@@ -36,6 +36,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    imageUploadStart: (state) => {
+      state.loading = true;
+    },
+    imageUploadSuccess: (state) => {
+      state.loading = false;
+    },
     logout: (state) => {
       state.loading = false;
       state.isLoggedIn = false;

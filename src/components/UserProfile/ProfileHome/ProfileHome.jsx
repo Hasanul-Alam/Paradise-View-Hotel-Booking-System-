@@ -70,7 +70,7 @@ const ProfileHome = () => {
         <div className="relative h-64 bg-gradient-to-r from-[#9da628] to-[#884d24]">
           <div className="absolute bottom-[-50px] left-4 sm:left-8">
             <img
-              src="https://i.ibb.co.com/7kVs2rF/DALL-E-2024-11-06-19-59-40-A-portrait-of-a-person-with-equal-height-and-width-centered-in-a-vibrant.webp"
+              src={user.photoURL}
               alt="Profile"
               className="h-36 w-36 rounded-full border-4 border-white shadow-lg"
             />

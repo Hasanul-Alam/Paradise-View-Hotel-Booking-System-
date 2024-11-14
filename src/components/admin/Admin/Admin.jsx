@@ -4,7 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 function Admin() {
   const menuData = [
     {
-      name: "Dashboard",
+      name: "Dashboard Home",
       link: "/admin",
     },
     {
@@ -30,9 +30,14 @@ function Admin() {
   ];
   // State to control sidebar visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [dashboardHeading, setDashboardHeading] = useState("Dashboard Home");
 
   // Toggle the sidebar and animate the button
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const handleDashboardHeading = (heading) => {
+    setDashboardHeading(heading);
+  };
 
   return (
     <div className="flex h-screen overflow-auto max-md:block">
@@ -42,16 +47,23 @@ function Admin() {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:relative lg:shadow-none`}
       >
-        <div className="h-16 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-          <h1 className="text-white font-bold text-xl tracking-wide">
-            Admin Dashboard
-          </h1>
-        </div>
+        <Link to={"/admin"}>
+          <div
+            onClick={() => handleDashboardHeading("Dashboard Home")}
+            className="h-16 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center"
+          >
+            <h1 className="text-white font-bold text-xl tracking-wide">
+              Admin Dashboard
+            </h1>
+          </div>
+        </Link>
         <nav className="mt-10 space-y-4">
           {menuData.map((item) => (
             <Link
               key={item.link}
-              onClick={toggleSidebar}
+              onClick={() => {
+                toggleSidebar(), handleDashboardHeading(item.name);
+              }}
               to={item.link}
               className="block px-4 py-2 w-[95%] mx-auto text-gray-700 hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white transition-all duration-300 ease-in-out rounded-lg transform hover:w-full"
             >
@@ -106,7 +118,7 @@ function Admin() {
               />
             </svg>
           </button>
-          <h1 className="text-2xl font-semibold">Fancy Dashboard</h1>
+          <h1 className="text-2xl font-semibold">{dashboardHeading}</h1>
         </header>
 
         {/* Dashboard content */}

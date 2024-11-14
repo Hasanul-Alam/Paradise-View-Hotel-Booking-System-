@@ -2,12 +2,71 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+
+  // Get all users
   const getUsers = async () => {
     const response = await axios.get(`http://localhost:3000/users`);
     setUsers(response.data);
+  };
+
+  // Handle Make Admin
+  const handleMakeAdmin = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to make this user an admin?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, do it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .patch(`http://localhost:3000/users/${id}`, {
+            role: "Admin",
+          })
+          .then((res) => {
+            if (res.data.modifiedCount > 0) {
+              getUsers();
+              Swal.fire({
+                title: "Upgrated!",
+                text: "This user has been upgrated to admin!",
+                icon: "success",
+              });
+            }
+          });
+      }
+    });
+  };
+
+  // Handle delete User
+  const handleDeleteUser = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:3000/users/${id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "User has been deleted successfully.",
+              icon: "success",
+            });
+            getUsers();
+          }
+        });
+      }
+    });
   };
 
   useEffect(() => {
@@ -16,7 +75,7 @@ export default function Users() {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">User List</h1>
+        {/* <h1 className="text-3xl font-bold text-center mb-6">User List</h1> */}
 
         {/* Responsive table wrapper */}
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -48,10 +107,26 @@ export default function Users() {
                     </span>
                   </td>
                   <td className="py-3 px-6 flex justify-center items-center gap-x-3">
-                    <button className="p-3 bg-blue-600 text-white rounded-lg">
+                    <button
+                      onClick={() => handleMakeAdmin(user._id)}
+                      className={`${
+                        user.role === "Admin"
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-blue-600"
+                      } p-3 text-white rounded-lg`}
+                      disabled={user.role === "Admin"}
+                    >
                       <MdAdminPanelSettings />
                     </button>
-                    <button className="p-3 bg-red-600 text-white rounded-lg">
+                    <button
+                      onClick={() => handleDeleteUser(user._id)}
+                      className={`${
+                        user.role === "Admin"
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-red-600"
+                      } p-3 text-white rounded-lg`}
+                      disabled={user.role === "Admin"}
+                    >
                       <FaTrashAlt />
                     </button>
                   </td>
@@ -82,22 +157,38 @@ export default function Users() {
                   <p className="text-gray-500 mb-2">{user.email}</p>
                   <span
                     className={`px-3 py-1 text-sm font-semibold rounded-full ${
-                      user.role === "admin"
+                      user.role === "Admin"
                         ? "bg-green-200 text-green-800"
                         : "bg-blue-200 text-blue-800"
                     }`}
                   >
-                    Admin
+                    {user.role}
                   </span>
                 </div>
               </div>
 
               {/* Action buttons */}
               <div className="flex space-x-3">
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                <button
+                  onClick={() => handleMakeAdmin(user._id)}
+                  className={`${
+                    user.role === "Admin"
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600"
+                  } p-3 text-white rounded-lg`}
+                  disabled={user.role === "Admin"}
+                >
                   <MdAdminPanelSettings />
                 </button>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                <button
+                  onClick={() => handleMakeAdmin(user._id)}
+                  className={`${
+                    user.role === "Admin"
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-red-600"
+                  } p-3 text-white rounded-lg`}
+                  disabled={user.role === "Admin"}
+                >
                   <FaTrashAlt />
                 </button>
               </div>

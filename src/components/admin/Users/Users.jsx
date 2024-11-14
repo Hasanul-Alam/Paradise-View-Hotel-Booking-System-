@@ -181,7 +181,7 @@ export default function Users() {
                   <MdAdminPanelSettings />
                 </button>
                 <button
-                  onClick={() => handleMakeAdmin(user._id)}
+                  onClick={() => handleDeleteUser(user._id)}
                   className={`${
                     user.role === "Admin"
                       ? "bg-gray-400 cursor-not-allowed"

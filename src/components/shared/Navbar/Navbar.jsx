@@ -9,7 +9,7 @@ import {
   registrationFailure,
   registrationStart,
   registrationSuccess,
-  loadingStart
+  loadingStart,
 } from "../../../features/auth/authSlice";
 import { signInWithEmailAndPassword } from "firebase/auth/cordova";
 import { auth } from "../../../firebase/firebase.config";
@@ -45,17 +45,17 @@ export default function Navbar() {
     };
   }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
+  const getUserDataFromDatabase = async (email) => {
+    const response = await axios.get(`http://localhost:3000/users/${email}`);
+    const user = response.data[0];
+    dispatch(loginSuccess(user));
+  };
+
   const listenToAuthChanges = (dispatch) => {
     dispatch(loadingStart());
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const userData = {
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        };
-        dispatch(loginSuccess(userData)); // Only dispatch the user data
+        getUserDataFromDatabase(user.email);
       }
     });
     return unsubscribe;
@@ -70,14 +70,7 @@ export default function Navbar() {
         password
       );
       if (userCredential) {
-        const userData = {
-          uid: userCredential.user.uid,
-          displayName: userCredential.user.displayName,
-          email: userCredential.user.email,
-          photoURL: userCredential.user.photoURL,
-        };
-        // Dispatch login success with the user object
-        dispatch(loginSuccess(userData));
+        getUserDataFromDatabase(userCredential.user.email);
       }
     } catch (error) {
       // Dispatch login failure if error occurs
@@ -102,16 +95,13 @@ export default function Navbar() {
             displayName: name,
             photoURL: imageUrl,
           });
-          console.log(
-            "User profile updated with displayName and photoURL",
-            userCredential.user
-          );
 
           const userData = {
             uid: userCredential.user.uid,
             displayName: userCredential.user.displayName,
             email: userCredential.user.email,
             photoURL: userCredential.user.photoURL,
+            role: "User",
           };
           await uploadUserData(userData);
           // After updating the profile, dispatch registration success

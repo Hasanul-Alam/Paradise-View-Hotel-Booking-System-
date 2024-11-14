@@ -35,7 +35,7 @@ function Admin() {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-auto max-md:block">
       {/* Sidebar */}
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-500 ease-in-out ${
@@ -110,7 +110,7 @@ function Admin() {
         </header>
 
         {/* Dashboard content */}
-        <main className="flex-1 p-6 bg-gray-100">
+        <main className="flex-1 p-6 bg-gray-100 max-md:block max-md:p-0">
           <Outlet />
           {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             

@@ -8,7 +8,7 @@ function Admin() {
       link: "/admin",
     },
     {
-      name: "Users",
+      name: "Manage Users",
       link: "/admin/users",
     },
     {
@@ -18,10 +18,6 @@ function Admin() {
     {
       name: "Manage Bookings",
       link: "/admin/manage-bookings",
-    },
-    {
-      name: "Newsletters",
-      link: "/admin/newsletters",
     },
     {
       name: "Back to Home",

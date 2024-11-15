@@ -86,12 +86,12 @@ export default function Footer() {
             </p>
             <div className="flex items-center border border-gray-300 overflow-hidden px-1 bg-white py-1 rounded">
               <input
-                type="text"
+                type="email"
                 className="px-4 py-2 w-full outline-none text-black"
                 placeholder="Enter your email"
               />
               <button className="bg-[#7C6A46] hover:bg-[#8C6B27] text-white px-4 py-2 rounded">
-                Submit
+                Subscribe
               </button>
             </div>
           </div>

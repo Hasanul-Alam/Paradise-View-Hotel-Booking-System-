@@ -22,7 +22,6 @@ import AdminHome from "./components/admin/AdminHome/AdminHome";
 import Users from "./components/admin/Users/Users";
 import ManageRooms from "./components/admin/ManageRooms/ManageRooms";
 import ManageBookings from "./components/admin/ManageBookings/ManageBookings";
-import Newsletters from "./components/admin/Newsletters/Newsletters";
 
 const router = createBrowserRouter([
   {
@@ -65,10 +64,6 @@ const router = createBrowserRouter([
       {
         path: "manage-bookings",
         element: <ManageBookings />,
-      },
-      {
-        path: "newsletters",
-        element: <Newsletters />,
       },
     ]
   },

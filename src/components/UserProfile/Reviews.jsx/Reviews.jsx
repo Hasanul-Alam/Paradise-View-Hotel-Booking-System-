@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 
 import { loadingStart, loadingEnd } from "../../../features/auth/authSlice";
 import PropTypes from "prop-types";
+import useFetchData from "../../../hooks/useFetchData";
 
 const StarRating = ({ rating }) => {
   return (
@@ -36,9 +37,10 @@ export default function Reviews() {
   const [name, setName] = useState("");
   const [apartmentName, setApartmentName] = useState("");
   const [review, setReview] = useState("");
-  const [reviewData, setReviewData] = useState([]);
-
+  // const [reviewData, setReviewData] = useState([]);
   const { user, loading } = useSelector((state) => state.auth);
+  const {data:reviewData, fetchData} = useFetchData(`http://localhost:3000/reviews/${user.email}`);
+
   const dispatch = useDispatch();
 
   // Handle when a star is clicked
@@ -88,21 +90,12 @@ export default function Reviews() {
           icon: "success",
         });
         clearForm();
-        getReviews();
+        fetchData();
       }, 800);
     }
   };
-
-  const getReviews = () => {
-    axios.get(`http://localhost:3000/reviews/${user.email}`).then((res) => {
-      if (res.data) {
-        setReviewData(res.data);
-      }
-    });
-    console.log(reviewData);
-  };
   useEffect(() => {
-    getReviews();
+    fetchData();
   }, []);
   return (
     <div className="w-[80%] mx-auto max-md:w-[95%] py-10">

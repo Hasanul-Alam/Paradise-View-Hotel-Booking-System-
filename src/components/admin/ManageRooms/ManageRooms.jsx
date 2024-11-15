@@ -2,15 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "./ManageRooms.css";
+import useFetchData from "../../../hooks/useFetchData";
 
 export default function ManageRooms() {
-  const [rooms, setRooms] = useState([]);
+  // const [rooms, setRooms] = useState([]);
   const [roomType, setRoomType] = useState("");
   const [totalRooms, setTotalRooms] = useState("");
   const [tariff, setTariff] = useState("");
   const [capacity, setCapacity] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [roomId, setRoomId] = useState("");
+  const { data: rooms, fetchData } = useFetchData(
+    `http://localhost:3000/rooms`
+  );
 
   const [updateFormData, setUpdateFormData] = useState({
     type: "",
@@ -44,13 +48,8 @@ export default function ManageRooms() {
         icon: "success",
       });
       toggleModal();
-      getAllRooms();
+      fetchData();
     }
-  };
-
-  const getAllRooms = async () => {
-    const response = await axios.get(`http://localhost:3000/rooms`);
-    setRooms(response.data);
   };
   // clear form
   const clearForm = () => {
@@ -77,7 +76,7 @@ export default function ManageRooms() {
         icon: "success",
       });
       clearForm();
-      getAllRooms();
+      fetchData();
     }
   };
 
@@ -115,14 +114,14 @@ export default function ManageRooms() {
               text: "Your room data has been deleted.",
               icon: "success",
             });
-            getAllRooms();
+            fetchData();
           }
         });
       }
     });
   };
   useEffect(() => {
-    getAllRooms();
+    fetchData();
   }, []);
   return (
     <div className="w-full mx-auto font-raleway">

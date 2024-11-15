@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import BookingsChart from "./BookingsChart";
-import axios from "axios";
+import useFetchData from "../../../hooks/useFetchData";
 
 const AdminDashboard = () => {
-  const [bookings, setBookings] = useState([]);
-  // Get All Bookings
-  const getBookings = async () => {
-    const response = await axios.get(`http://localhost:3000/bookings`);
-    await setBookings(response.data);
-  };
+  const {data:bookings, fetchData} = useFetchData(`http://localhost:3000/bookings`);
 
   useEffect(() => {
-    getBookings();
+    fetchData();
   }, []);
 
   return (

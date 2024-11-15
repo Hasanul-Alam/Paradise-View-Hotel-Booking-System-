@@ -28,12 +28,20 @@ export default function ManageBookings() {
       confirmButtonText: "Yes, confirm it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(id);
-        Swal.fire({
-          title: "Confirmed!",
-          text: "Booking has been confirmed.",
-          icon: "success",
-        });
+        axios
+          .patch(`http://localhost:3000/bookings/${id}`, {
+            status: "Confirmed",
+          })
+          .then((res) => {
+            if (res.data.modifiedCount > 0) {
+              Swal.fire({
+                title: "Confirmed!",
+                text: "Booking has been confirmed.",
+                icon: "success",
+              });
+              getAllBookings();
+            }
+          });
       }
     });
   };
@@ -49,12 +57,20 @@ export default function ManageBookings() {
       confirmButtonText: "Yes, cancel it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(id);
-        Swal.fire({
-          title: "Cancelled!",
-          text: "Booking has been cancelled.",
-          icon: "success",
-        });
+        axios
+          .patch(`http://localhost:3000/bookings/${id}`, {
+            status: "Cancelled",
+          })
+          .then((res) => {
+            if (res.data.modifiedCount > 0) {
+              Swal.fire({
+                title: "Cancelled!",
+                text: "Booking has been cancelled.",
+                icon: "success",
+              });
+              getAllBookings();
+            }
+          });
       }
     });
   };
@@ -106,22 +122,30 @@ export default function ManageBookings() {
                     <button
                       onClick={() => handleConfirmBooking(booking._id)}
                       className={`${
-                        booking.status === "Confirmed" || booking.status ==="Cancelled"
+                        booking.status === "Confirmed" ||
+                        booking.status === "Cancelled"
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-blue-600"
                       } p-3 text-white rounded-lg`}
-                      disabled={booking.status === "Confirmed" || booking.status ==="Cancelled"}
+                      disabled={
+                        booking.status === "Confirmed" ||
+                        booking.status === "Cancelled"
+                      }
                     >
                       <FaCheck />
                     </button>
                     <button
                       onClick={() => handleCancelBooking(booking._id)}
                       className={`${
-                        booking.status === "Confirmed" || booking.status ==="Cancelled"
+                        booking.status === "Confirmed" ||
+                        booking.status === "Cancelled"
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-red-600"
                       } p-3 text-white rounded-lg`}
-                      disabled={booking.status === "Confirmed" || booking.status ==="Cancelled"}
+                      disabled={
+                        booking.status === "Confirmed" ||
+                        booking.status === "Cancelled"
+                      }
                     >
                       <ImCross />
                     </button>
@@ -176,22 +200,30 @@ export default function ManageBookings() {
                 <button
                   onClick={() => handleConfirmBooking(booking._id)}
                   className={`${
-                    booking.status === "Confirmed" || booking.status ==="Cancelled"
+                    booking.status === "Confirmed" ||
+                    booking.status === "Cancelled"
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-blue-600"
                   } p-3 text-white rounded-lg`}
-                  disabled={booking.status === "Confirmed" || booking.status ==="Cancelled"}
+                  disabled={
+                    booking.status === "Confirmed" ||
+                    booking.status === "Cancelled"
+                  }
                 >
                   <FaCheck />
                 </button>
                 <button
                   onClick={() => handleCancelBooking(booking._id)}
                   className={`${
-                    booking.status === "Confirmed" || booking.status ==="Cancelled"
+                    booking.status === "Confirmed" ||
+                    booking.status === "Cancelled"
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-red-600"
                   } p-3 text-white rounded-lg`}
-                  disabled={booking.status === "Confirmed" || booking.status ==="Cancelled"}
+                  disabled={
+                    booking.status === "Confirmed" ||
+                    booking.status === "Cancelled"
+                  }
                 >
                   <ImCross />
                 </button>

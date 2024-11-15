@@ -1,14 +1,18 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useFetchData from "../../../hooks/useFetchData";
 
 export default function Users() {
-  const { data: users, fetchData } = useFetchData(
-    `http://localhost:3000/users`
-  );
+  const [users, setUsers] = useState([]);
+  const { fetchData } = useFetchData();
+
+  const getUsers = async () => {
+    const usersData = await fetchData(`http://localhost:3000/users`);
+    setUsers(usersData);
+  }
 
   // Handle Make Admin
   const handleMakeAdmin = async (id) => {
@@ -28,7 +32,7 @@ export default function Users() {
           })
           .then((res) => {
             if (res.data.modifiedCount > 0) {
-              fetchData();
+              getUsers();
               Swal.fire({
                 title: "Upgrated!",
                 text: "This user has been upgrated to admin!",
@@ -59,7 +63,7 @@ export default function Users() {
               text: "User has been deleted successfully.",
               icon: "success",
             });
-            fetchData();
+            getUsers();
           }
         });
       }
@@ -67,7 +71,7 @@ export default function Users() {
   };
 
   useEffect(() => {
-    fetchData();
+    getUsers();
   }, []);
   return (
     <div className="min-h-screen bg-gray-100 p-4">

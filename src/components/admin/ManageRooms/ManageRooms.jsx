@@ -12,9 +12,8 @@ export default function ManageRooms() {
   const [capacity, setCapacity] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [roomId, setRoomId] = useState("");
-  const { data: rooms, fetchData } = useFetchData(
-    `http://localhost:3000/rooms`
-  );
+  const [rooms, setRooms] = useState([]);
+  const { fetchData } = useFetchData();
 
   const [updateFormData, setUpdateFormData] = useState({
     type: "",
@@ -25,6 +24,11 @@ export default function ManageRooms() {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+  };
+
+  const getRoomsData = async () => {
+    const roomsData = await fetchData(`http://localhost:3000/rooms`);
+    setRooms(roomsData);
   };
 
   const handleChange = (e) => {
@@ -48,7 +52,7 @@ export default function ManageRooms() {
         icon: "success",
       });
       toggleModal();
-      fetchData();
+      getRoomsData();
     }
   };
   // clear form
@@ -76,7 +80,7 @@ export default function ManageRooms() {
         icon: "success",
       });
       clearForm();
-      fetchData();
+      getRoomsData();
     }
   };
 
@@ -114,14 +118,14 @@ export default function ManageRooms() {
               text: "Your room data has been deleted.",
               icon: "success",
             });
-            fetchData();
+            getRoomsData();
           }
         });
       }
     });
   };
   useEffect(() => {
-    fetchData();
+    getRoomsData();
   }, []);
   return (
     <div className="w-full mx-auto font-raleway">

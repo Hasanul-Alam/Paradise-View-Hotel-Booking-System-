@@ -1,4 +1,23 @@
+import axios from "axios";
+import { useState } from "react";
+import Swal from "sweetalert2";
+
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = async () => {
+    const response = await axios.post(`http://localhost:3000/newsletters`, {email});
+    if (response.data.insertedId) {
+      Swal.fire({
+        icon: "success",
+        title: "Subscribed",
+        text: "You have successfully subscribed.",
+      });
+    }
+    // Clear email field.
+    setEmail("");
+    // console.log({email})
+  };
   return (
     <div className="bg-[#7C6A46] pt-20 pb-10">
       <div className="mx-auto w-[80%] text-white max-md:w-[95%]">
@@ -57,7 +76,6 @@ export default function Footer() {
           {/* Horizontal line for mobile view */}
           <div className="bg-white w-1/2 mx-auto h-[1px] my-5 hidden max-md:block"></div>
 
-          
           <div className="max-md:flex justify-center">
             <div className="font-raleway">
               <h4 className="text-lg max-md:text-xl max-md:text-center">
@@ -86,11 +104,16 @@ export default function Footer() {
             </p>
             <div className="flex items-center border border-gray-300 overflow-hidden px-1 bg-white py-1 rounded">
               <input
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 type="email"
                 className="px-4 py-2 w-full outline-none text-black"
                 placeholder="Enter your email"
               />
-              <button className="bg-[#7C6A46] hover:bg-[#8C6B27] text-white px-4 py-2 rounded">
+              <button
+                onClick={handleSubscribe}
+                className="bg-[#7C6A46] hover:bg-[#8C6B27] text-white px-4 py-2 rounded"
+              >
                 Subscribe
               </button>
             </div>

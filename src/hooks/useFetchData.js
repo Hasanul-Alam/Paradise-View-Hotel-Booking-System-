@@ -1,18 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 
-const useFetchData = (url) => {
+const useFetchData = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
   const [data, setData] = useState([]);
 
   // Function to manually trigger data fetching
-  const fetchData = async () => {
+  const fetchData = async (url) => {
     setLoading(true); // Start loading before request
     try {
       const response = await axios.get(url); // Axios request
       setError(null); // Reset any previous error
       setData(response.data); // Set fetched data
+      return response.data;
     } catch (err) {
       setError(err.message); // Set error if request fails
     } finally {

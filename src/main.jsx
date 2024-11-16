@@ -15,14 +15,14 @@ import ProtectedRoute from "./components/routes/ProtectedRoute/ProtectedRoute";
 import Bookings from "./components/UserProfile/Bookings/Bookings";
 import PaymentMethod from "./components/UserProfile/PaymentMethod/PaymentMethod";
 import ProfileHome from "./components/UserProfile/ProfileHome/ProfileHome";
-import Reviews from "./components/UserProfile/Reviews.jsx/Reviews";
+import Reviews from "./components/UserProfile/Reviews/Reviews";
 import { PersistGate } from "redux-persist/integration/react";
 import Admin from "./components/admin/Admin/Admin";
 import AdminHome from "./components/admin/AdminHome/AdminHome";
 import Users from "./components/admin/Users/Users";
 import ManageRooms from "./components/admin/ManageRooms/ManageRooms";
 import ManageBookings from "./components/admin/ManageBookings/ManageBookings";
-import AdminRoute from "./components/routes/AdminRoute/Adminroute";
+import AdminRoute from "./components/routes/AdminRoute/AdminRoute";
 
 const router = createBrowserRouter([
   {

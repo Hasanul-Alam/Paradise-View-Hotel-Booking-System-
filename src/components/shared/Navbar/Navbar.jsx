@@ -50,7 +50,7 @@ export default function Navbar() {
     const response = await axios.get(`http://localhost:3000/users/${email}`);
     const user = response.data[0];
     dispatch(loginSuccess(user));
-    console.log(user)
+    console.log(user);
   };
 
   const listenToAuthChanges = (dispatch) => {
@@ -58,9 +58,8 @@ export default function Navbar() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         getUserDataFromDatabase(user.email);
-      }
-      else{
-        dispatch(loadingEnd())
+      } else {
+        dispatch(loadingEnd());
       }
     });
     return unsubscribe;
@@ -420,9 +419,11 @@ export default function Navbar() {
               Login
             </button>
           )}
-          <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
-            Book Now
-          </button>
+          <Link to="/admin">
+            <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">
+              Admin
+            </button>
+          </Link>
         </div>
       </nav>
       {isModalOpen && (

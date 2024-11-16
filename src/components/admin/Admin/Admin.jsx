@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { auth } from "../../../firebase/firebase.config";
+import { signOut } from "firebase/auth";
+import { logout } from "../../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 function Admin() {
   const menuData = [
@@ -31,8 +35,17 @@ function Admin() {
   // Toggle the sidebar and animate the button
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleDashboardHeading = (heading) => {
     setDashboardHeading(heading);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    dispatch(logout());
+    navigate('/');
   };
 
   return (
@@ -66,7 +79,7 @@ function Admin() {
               {item.name}
             </Link>
           ))}
-          <button className="block px-4 py-2 w-[95%] mx-auto text-gray-700 hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white transition-all duration-300 ease-in-out rounded-lg transform hover:w-full text-left">
+          <button onClick={handleLogout} className="block px-4 py-2 w-[95%] mx-auto text-gray-700 hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white transition-all duration-300 ease-in-out rounded-lg transform hover:w-full text-left">
             Logout
           </button>
         </nav>

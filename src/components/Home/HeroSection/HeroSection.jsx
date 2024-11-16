@@ -11,7 +11,7 @@ export default function HeroSection() {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const today = new Date().toISOString().split("T")[0];
-  const { user } = useSelector((state) => state.auth);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
 
   // API Base URL
   const apiUrl = "http://localhost:3000"; // Use your actual backend URL
@@ -59,7 +59,7 @@ export default function HeroSection() {
     // Check room availability
     const isAvailable = await checkRoomAvailability();
 
-    if (isAvailable) {
+    if (isAvailable && isLoggedIn) {
       // Show summary and ask for confirmation
       Swal.fire({
         title: "Confirm Your Booking",
@@ -104,10 +104,17 @@ export default function HeroSection() {
           }
         }
       });
-    } else {
+    } else if(!isLoggedIn) {
       Swal.fire({
-        title: "Room Unavailable!",
-        text: "The selected room is unavailable for the given dates.",
+        title: "Please Login",
+        text: "Please login first to book a room.",
+        icon: "error",
+      });
+    }
+    else{
+      Swal.fire({
+        title: "Unavailable",
+        text: "Room is not available for that particular date range.",
         icon: "error",
       });
     }

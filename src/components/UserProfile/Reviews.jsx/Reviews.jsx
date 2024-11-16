@@ -37,9 +37,9 @@ export default function Reviews() {
   const [name, setName] = useState("");
   const [apartmentName, setApartmentName] = useState("");
   const [review, setReview] = useState("");
-  // const [reviewData, setReviewData] = useState([]);
+  const [reviewData, setReviewData] = useState([]);
   const { user, loading } = useSelector((state) => state.auth);
-  const {data:reviewData, fetchData} = useFetchData(`http://localhost:3000/reviews/${user.email}`);
+  const { fetchData} = useFetchData();
 
   const dispatch = useDispatch();
 
@@ -47,6 +47,12 @@ export default function Reviews() {
   const handleClick = (value) => {
     setRating(value);
   };
+
+  // get all reviews
+  const getReviews = async () => {
+    const reviewData = await fetchData(`http://localhost:3000/reviews/${user.email}`);
+    setReviewData(reviewData);
+  }
 
   // Handle when mouse hovers over a star
   const handleMouseOver = (value) => {
@@ -90,12 +96,12 @@ export default function Reviews() {
           icon: "success",
         });
         clearForm();
-        fetchData();
+        getReviews();
       }, 800);
     }
   };
   useEffect(() => {
-    fetchData();
+    getReviews();
   }, []);
   return (
     <div className="w-[80%] mx-auto max-md:w-[95%] py-10">

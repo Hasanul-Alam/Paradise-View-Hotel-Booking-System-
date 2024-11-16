@@ -48,9 +48,14 @@ export default function Navbar() {
 
   const getUserDataFromDatabase = async (email) => {
     const response = await axios.get(`http://localhost:3000/users/${email}`);
-    const user = response.data[0];
-    dispatch(loginSuccess(user));
-    console.log(user);
+    if (response.data) {
+      const user = response.data[0];
+      dispatch(loginSuccess(user));
+      console.log(user);
+    }
+    else{
+      dispatch(loadingEnd());
+    }
   };
 
   const listenToAuthChanges = (dispatch) => {

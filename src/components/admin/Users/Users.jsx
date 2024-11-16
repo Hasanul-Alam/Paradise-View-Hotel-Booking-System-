@@ -10,7 +10,7 @@ export default function Users() {
   const { fetchData } = useFetchData();
 
   const getUsers = async () => {
-    const usersData = await fetchData(`http://localhost:3000/users`);
+    const usersData = await fetchData(`https://paradise-view-server.onrender.com/users`);
     setUsers(usersData);
   }
 
@@ -27,7 +27,7 @@ export default function Users() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .patch(`http://localhost:3000/users/${id}`, {
+          .patch(`https://paradise-view-server.onrender.com/users/${id}`, {
             role: "Admin",
           })
           .then((res) => {
@@ -56,7 +56,7 @@ export default function Users() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/users/${id}`).then((res) => {
+        axios.delete(`https://paradise-view-server.onrender.com/users/${id}`).then((res) => {
           if (res.data.deletedCount > 0) {
             Swal.fire({
               title: "Deleted!",

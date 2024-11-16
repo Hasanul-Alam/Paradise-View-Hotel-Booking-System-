@@ -15,25 +15,25 @@ const AdminDashboard = () => {
   const { fetchData } = useFetchData();
 
   const getBookings = async () => {
-    const bookingsData = await fetchData(`http://localhost:3000/bookings`);
+    const bookingsData = await fetchData(`https://paradise-view-server.onrender.com/bookings`);
     setBookings(bookingsData);
     getAllData();
   };
 
   const getUsers = async () => {
-    const usersData = await fetchData(`http://localhost:3000/users`);
+    const usersData = await fetchData(`https://paradise-view-server.onrender.com/users`);
     setUsers(usersData);
     separateUserAndAdmin(usersData);
   };
   const getRooms = async () => {
-    const roomsData = await fetchData(`http://localhost:3000/rooms`);
+    const roomsData = await fetchData(`https://paradise-view-server.onrender.com/rooms`);
     setRooms(roomsData);
     separateRoomType(roomsData);
   };
 
   const getNewsLetters = async () => {
     const newsLettersData = await fetchData(
-      `http://localhost:3000/newsletters`
+      `https://paradise-view-server.onrender.com/newsletters`
     );
     setNewsLetters(newsLettersData);
   };

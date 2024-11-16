@@ -6,7 +6,7 @@ export default function Footer() {
   const [email, setEmail] = useState("");
 
   const handleSubscribe = async () => {
-    const response = await axios.post(`http://localhost:3000/newsletters`, {email});
+    const response = await axios.post(`https://paradise-view-server.onrender.com/newsletters`, {email});
     if (response.data.insertedId) {
       Swal.fire({
         icon: "success",

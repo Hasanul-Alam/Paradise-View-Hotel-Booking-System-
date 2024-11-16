@@ -14,7 +14,7 @@ export default function HeroSection() {
   const { user, isLoggedIn } = useSelector((state) => state.auth);
 
   // API Base URL
-  const apiUrl = "http://localhost:3000"; // Use your actual backend URL
+  const apiUrl = "https://paradise-view-server.onrender.com"; // Use your actual backend URL
 
   // Check room availability
   const checkRoomAvailability = async () => {

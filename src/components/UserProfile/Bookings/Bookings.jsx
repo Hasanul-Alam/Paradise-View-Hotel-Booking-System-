@@ -21,7 +21,7 @@ export default function Bookings() {
     }).then((result) => {
       if (result.isConfirmed) {
         setLoading(true);
-        axios.delete(`http://localhost:3000/bookings/${id}`).then((res) => {
+        axios.delete(`https://paradise-view-server.onrender.com/bookings/${id}`).then((res) => {
           if (res.data.deletedCount > 0) {
             setTimeout(() => {
               Swal.fire({
@@ -38,7 +38,7 @@ export default function Bookings() {
     });
   };
   const getBookings = () => {
-    const response = axios.get(`http://localhost:3000/bookings/${user.email}`);
+    const response = axios.get(`https://paradise-view-server.onrender.com/bookings/${user.email}`);
     return response;
   };
   const loadBookings = async () => {

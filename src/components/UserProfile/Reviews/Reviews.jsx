@@ -50,7 +50,7 @@ export default function Reviews() {
 
   // get all reviews
   const getReviews = async () => {
-    const reviewData = await fetchData(`http://localhost:3000/reviews/${user.email}`);
+    const reviewData = await fetchData(`https://paradise-view-server.onrender.com/reviews/${user.email}`);
     setReviewData(reviewData);
   }
 
@@ -86,7 +86,7 @@ export default function Reviews() {
       userImage: user.photoURL,
       email: user.email,
     };
-    const response = await axios.post(`http://localhost:3000/reviews`, data);
+    const response = await axios.post(`https://paradise-view-server.onrender.com/reviews`, data);
     if (response.data.insertedId) {
       setTimeout(() => {
         dispatch(loadingEnd());

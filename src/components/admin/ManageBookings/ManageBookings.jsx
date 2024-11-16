@@ -9,7 +9,7 @@ export default function ManageBookings() {
 
   // Get all bookings
   const getAllBookings = async () => {
-    const response = await axios.get(`http://localhost:3000/bookings`);
+    const response = await axios.get(`https://paradise-view-server.onrender.com/bookings`);
     setBookings(response.data);
   };
 
@@ -29,7 +29,7 @@ export default function ManageBookings() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .patch(`http://localhost:3000/bookings/${id}`, {
+          .patch(`https://paradise-view-server.onrender.com/bookings/${id}`, {
             status: "Confirmed",
           })
           .then((res) => {
@@ -58,7 +58,7 @@ export default function ManageBookings() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .patch(`http://localhost:3000/bookings/${id}`, {
+          .patch(`https://paradise-view-server.onrender.com/bookings/${id}`, {
             status: "Cancelled",
           })
           .then((res) => {

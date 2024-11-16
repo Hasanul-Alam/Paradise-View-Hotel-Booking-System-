@@ -27,7 +27,7 @@ export default function ManageRooms() {
   };
 
   const getRoomsData = async () => {
-    const roomsData = await fetchData(`http://localhost:3000/rooms`);
+    const roomsData = await fetchData(`https://paradise-view-server.onrender.com/rooms`);
     setRooms(roomsData);
   };
 
@@ -42,7 +42,7 @@ export default function ManageRooms() {
     e.preventDefault();
     console.log("Form data submitted:", updateFormData);
     const response = await axios.patch(
-      `http://localhost:3000/rooms/${roomId}`,
+      `https://paradise-view-server.onrender.com/rooms/${roomId}`,
       updateFormData
     );
     if (response) {
@@ -72,7 +72,7 @@ export default function ManageRooms() {
       capacity,
       tariff,
     };
-    const response = await axios.post("http://localhost:3000/rooms", data);
+    const response = await axios.post("https://paradise-view-server.onrender.com/rooms", data);
     if (response.data.insertedId) {
       Swal.fire({
         title: "Inserted!",
@@ -87,7 +87,7 @@ export default function ManageRooms() {
   // Room details update function
   const handleRoomUpdate = async (id) => {
     setRoomId(id);
-    const response = await axios.get(`http://localhost:3000/rooms/${id}`);
+    const response = await axios.get(`https://paradise-view-server.onrender.com/rooms/${id}`);
     const data = response.data[0];
     setUpdateFormData({
       type: data.type,
@@ -111,7 +111,7 @@ export default function ManageRooms() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/rooms/${id}`).then((res) => {
+        axios.delete(`https://paradise-view-server.onrender.com/rooms/${id}`).then((res) => {
           if (res.data.deletedCount > 0) {
             Swal.fire({
               title: "Deleted!",

@@ -155,14 +155,14 @@ export default function HeroSection() {
       <div className="container mx-auto p-4 mt-10">
         <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-6 max-md:grid-cols-2 items-center space-y-4 md:space-y-0">
           {/* Room Type */}
-          <div className="flex items-center space-x-2 justify-self-center max-md:justify-self-end">
+          <div className="flex items-center space-x-2 justify-self-center max-md:justify-self-start">
             <span className="text-xl">
               <i className="fas fa-hotel"></i>
             </span>
             <div>
               <p className="text-sm font-semibold">Room type</p>
               <select
-                className="text-sm text-gray-500 -ml-[4px]"
+                className="text-sm text-black -ml-[4px]"
                 value={roomType}
                 onChange={(e) => setRoomType(e.target.value)}
               >
@@ -174,14 +174,14 @@ export default function HeroSection() {
           </div>
 
           {/* Person */}
-          <div className="flex items-center space-x-2 justify-self-center max-md:justify-self-start">
+          <div className="flex items-center space-x-2 justify-self-center max-md:justify-self-end">
             <span className="text-xl">
               <i className="fas fa-user"></i>
             </span>
             <div>
               <p className="text-sm font-semibold">Person</p>
               <select
-                className="text-sm text-gray-500 -ml-[2px]"
+                className="text-sm text-black -ml-[2px]"
                 value={person}
                 onChange={(e) => setPerson(e.target.value)}
               >
@@ -203,7 +203,7 @@ export default function HeroSection() {
             <div>
               <p className="text-sm font-semibold">Rooms</p>
               <select
-                className="text-sm text-gray-500 -ml-[2px]"
+                className="text-sm text-black -ml-[2px]"
                 value={rooms}
                 onChange={(e) => setRooms(e.target.value)}
               >
@@ -224,7 +224,7 @@ export default function HeroSection() {
               <p className="text-sm font-semibold">Check in</p>
               <input
                 type="date"
-                className="text-sm text-gray-500"
+                className="text-sm text-black"
                 min={today}
                 value={checkInDate}
                 onChange={(e) => setCheckInDate(e.target.value)}
@@ -241,7 +241,7 @@ export default function HeroSection() {
               <p className="text-sm font-semibold">Check out</p>
               <input
                 type="date"
-                className="text-sm text-gray-500"
+                className="text-sm text-black"
                 min={today}
                 value={checkOutDate}
                 onChange={(e) => setCheckOutDate(e.target.value)}

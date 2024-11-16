@@ -47,7 +47,7 @@ export default function Navbar() {
   }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
   const getUserDataFromDatabase = async (email) => {
-    const response = await axios.get(`http://localhost:3000/users/${email}`);
+    const response = await axios.get(`https://paradise-view-server.onrender.com/users/${email}`);
     if (response.data) {
       const user = response.data[0];
       dispatch(loginSuccess(user));
@@ -155,7 +155,7 @@ export default function Navbar() {
 
   // Upload user data to database
   const uploadUserData = async (user) => {
-    const response = await axios.post(`http://localhost:3000/users`, user);
+    const response = await axios.post(`https://paradise-view-server.onrender.com/users`, user);
     if (response.data.insertedId) {
       Swal.fire({
         title: "Success!",

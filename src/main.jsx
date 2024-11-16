@@ -22,7 +22,7 @@ import AdminHome from "./components/admin/AdminHome/AdminHome";
 import Users from "./components/admin/Users/Users";
 import ManageRooms from "./components/admin/ManageRooms/ManageRooms";
 import ManageBookings from "./components/admin/ManageBookings/ManageBookings";
-import AdminRoute from "./components/routes/AdminRoute/AdminRoute";
+import AdminRoute from "./components/routes/AdminRoute/Adminroute";
 
 const router = createBrowserRouter([
   {

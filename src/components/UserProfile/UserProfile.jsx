@@ -1,12 +1,23 @@
+import { signOut } from "firebase/auth";
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { logout } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { auth } from "../../firebase/firebase.config";
 
 export default function UserProfile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const dispatch = useDispatch();
+
   //toggle mobile menu
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    dispatch(logout());
   };
 
   return (
@@ -15,17 +26,19 @@ export default function UserProfile() {
       <aside className="bg-white w-full lg:w-64 shadow-lg hidden lg:block max-md:w-full">
         <Link to="/">
           <div className="p-6 bg-[#7C6A46] text-white">
-            <h1 className="text-2xl font-semibold font-raleway">Paradise View</h1>
+            <h1 className="text-2xl font-semibold font-raleway">
+              Paradise View
+            </h1>
           </div>
         </Link>
         <nav className="mt-8">
           <ul>
-            <li className="px-6 py-3 hover:bg-indigo-50">
+            <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
               <Link to="/profile" className="text-[#7C6A46] font-medium block">
                 Profile
               </Link>
             </li>
-            <li className="px-6 py-3 hover:bg-indigo-50">
+            <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
               <Link
                 to="/profile/reviews"
                 className="text-[#7C6A46] font-medium block"
@@ -33,7 +46,7 @@ export default function UserProfile() {
                 Reviews
               </Link>
             </li>
-            <li className="px-6 py-3 hover:bg-indigo-50">
+            <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
               <Link
                 to="/profile/bookings"
                 className="text-[#7C6A46] font-medium block"
@@ -41,23 +54,26 @@ export default function UserProfile() {
                 Bookings
               </Link>
             </li>
-            <li className="px-6 py-3 hover:bg-indigo-50">
+            {/* <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
               <Link
                 to="/profile/paymentMethod"
                 className="text-[#7C6A46] font-medium block"
               >
                 Payment Methods
               </Link>
-            </li>
-            <li className="px-6 py-3 hover:bg-indigo-50">
+            </li> */}
+            <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
               <Link to="/" className="text-[#7C6A46] font-medium block">
                 Back to Home
               </Link>
             </li>
-            <li className="px-6 py-3 hover:bg-indigo-50">
-              <Link to="/profile/" className="text-[#7C6A46] font-medium block">
+            <li className="px-6 py-3 hover:bg-indigo-50" onClick={toggleMenu}>
+              <button
+                onClick={handleLogout}
+                className="text-[#7C6A46] font-medium block"
+              >
                 Logout
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>
@@ -107,42 +123,62 @@ export default function UserProfile() {
 
         {/* Mobile Menu */}
         <nav
-          className={`absolute left-0 top-16 bg-white w-full z-10 transition-all duration-300 ease-in-out transform ${
+          className={`absolute left-0 top-16 bg-white w-full z-50 transition-all duration-300 ease-in-out transform ${
             isMenuOpen
               ? "opacity-100 translate-y-0"
               : "opacity-0 -translate-y-5 pointer-events-none"
           }`}
         >
           <ul className="py-2">
-            <li className="py-2 px-4">
-              <Link to="/profile" className="text-[#7C6A46] font-medium block">
+            <li className="py-2 px-4" onClick={toggleMenu}>
+              <Link
+                to="/profile"
+                className="text-[#7C6A46] font-medium block text-center"
+              >
                 Profile
               </Link>
             </li>
-            <li className="py-2 px-4">
-              <Link to="/profile/" className="text-[#7C6A46] font-medium block">
-                Settings
+            <li className="py-2 px-4" onClick={toggleMenu}>
+              <Link
+                to="/profile/reviews"
+                className="text-[#7C6A46] font-medium block text-center"
+              >
+                Reviews
               </Link>
             </li>
-            <li className="py-2 px-4">
-              <Link to="/profile/" className="text-[#7C6A46] font-medium block">
+            <li className="py-2 px-4" onClick={toggleMenu}>
+              <Link
+                to="/profile/bookings"
+                className="text-[#7C6A46] font-medium block text-center"
+              >
                 Bookings
               </Link>
             </li>
-            <li className="py-2 px-4">
-              <Link to="/profile/" className="text-[#7C6A46] font-medium block">
+            {/* <li className="py-2 px-4" onClick={toggleMenu}>
+              <Link
+                to="/profile/paymentMethod"
+                className="text-[#7C6A46] font-medium block text-center"
+              >
                 Payment Methods
               </Link>
-            </li>
-            <li className="py-2 px-4">
-              <Link to="/" className="text-[#7C6A46] font-medium block">
+            </li> */}
+            <li className="py-2 px-4" onClick={toggleMenu}>
+              <Link
+                to="/"
+                className="text-[#7C6A46] font-medium block text-center"
+              >
                 Back to Home
               </Link>
             </li>
-            <li className="py-2 px-4">
-              <Link to="/profile/" className="text-[#7C6A46] font-medium block">
-                Logout
-              </Link>
+            <li className="py-2 px-4" onClick={toggleMenu}>
+              <div className="flex justify-center">
+                <button
+                  onClick={handleLogout}
+                  className="text-[#7C6A46] font-medium block"
+                >
+                  Logout
+                </button>
+              </div>
             </li>
           </ul>
         </nav>

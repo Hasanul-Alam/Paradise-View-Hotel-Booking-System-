@@ -47,13 +47,13 @@ export default function Navbar() {
   }, [dispatch]); // We should only be adding `dispatch` as a dependency, not the state itself
 
   const getUserDataFromDatabase = async (email) => {
-    const response = await axios.get(`https://paradise-view-server.onrender.com/users/${email}`);
+    const response = await axios.get(
+      `https://paradise-view-server.onrender.com/users/${email}`
+    );
     if (response.data) {
       const user = response.data[0];
       dispatch(loginSuccess(user));
-      
-    }
-    else{
+    } else {
       dispatch(loadingEnd());
     }
   };
@@ -155,7 +155,10 @@ export default function Navbar() {
 
   // Upload user data to database
   const uploadUserData = async (user) => {
-    const response = await axios.post(`https://paradise-view-server.onrender.com/users`, user);
+    const response = await axios.post(
+      `https://paradise-view-server.onrender.com/users`,
+      user
+    );
     if (response.data.insertedId) {
       Swal.fire({
         title: "Success!",
@@ -417,12 +420,14 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <button
-              onClick={openModal}
-              className="hover:text-gray-900 transition"
-            >
-              Login
-            </button>
+            <div className="flex justify-center mt-2">
+              <button
+                onClick={openModal}
+                className="hover:text-gray-900 transition"
+              >
+                Login
+              </button>
+            </div>
           )}
           <Link to="/admin">
             <button className="w-full bg-[#7C6A46] hover:bg-[#8C6B27] px-4 py-2 mt-2 rounded-md transition text-white">

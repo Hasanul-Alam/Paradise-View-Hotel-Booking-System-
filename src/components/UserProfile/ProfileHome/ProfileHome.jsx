@@ -1,45 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import useFetchData from "../../../hooks/useFetchData";
 
 const ProfileHome = () => {
-  // const user = {
-  //   name: 'John Doe',
-  //   email: 'john.doe@example.com',
-  //   profilePicture: 'https://via.placeholder.com/150', // Replace with dynamic profile image
-  //   location: 'New York, USA',
-  //   phone: '+1 234 567 890',
-  //   bio: 'Travel enthusiast, love exploring new places and experiencing different cultures.',
-  // };
+  const [bookings, setBookings] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const {fetchData} = useFetchData();
 
-  const [bookings] = useState([
-    {
-      id: 1,
-      hotel: "Green Valley Resort",
-      checkIn: "March 15, 2024",
-      checkOut: "March 20, 2024",
-      status: "Completed",
-    },
-    {
-      id: 2,
-      hotel: "Ocean Breeze Hotel",
-      checkIn: "May 10, 2024",
-      checkOut: "May 12, 2024",
-      status: "Upcoming",
-    },
-  ]);
+  const { user, loading } = useSelector((state) => state.auth);
 
-  const [reviews] = useState([
-    {
-      hotel: "Green Valley Resort",
-      rating: 4,
-      comment: "Great experience, wonderful staff and facilities.",
-    },
-    {
-      hotel: "Ocean Breeze Hotel",
-      rating: 5,
-      comment: "Absolutely amazing! Highly recommend.",
-    },
-  ]);
+  const getBookings = async () => {
+    const bookingsData = await fetchData(`https://paradise-view-server.onrender.com/bookings/${user.email}`)
+    setBookings(bookingsData);
+  }
+  const getReviews = async () => {
+    const reviewsData = await fetchData(`https://paradise-view-server.onrender.com/reviews/${user.email}`)
+    setReviews(reviewsData);
+  }
+
+  useEffect(() => {
+    getBookings();
+    getReviews();
+  },[])
 
   const handleEditProfile = () => {
     alert("Edit Profile functionality coming soon!");
@@ -49,7 +31,7 @@ const ProfileHome = () => {
     alert("Logging out...");
   };
 
-  const { user, loading } = useSelector((state) => state.auth);
+
 
   if (loading) {
     return (
@@ -64,8 +46,8 @@ const ProfileHome = () => {
   console.log('Error: ', user)
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
-      <div className="w-[80%] mx-auto bg-white rounded-lg shadow-lg overflow-hidden max-md:w-full">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4 max-md:p-0">
+      <div className="w-[80%] mx-auto bg-white rounded-lg shadow-lg overflow-hidden max-md:w-full max-md:rounded">
         {/* Header with profile picture and cover image */}
         <div className="relative h-64 bg-gradient-to-r from-[#9da628] to-[#884d24]">
           <div className="absolute bottom-[-50px] left-4 sm:left-8">
@@ -87,7 +69,6 @@ const ProfileHome = () => {
               <p className="text-lg text-gray-500">
                 {user.email}
               </p>
-              <p className="text-sm text-gray-400">{"Molla Bari"}</p>
             </div>
             <div className="mt-4 sm:mt-0 flex space-x-4">
               <button
@@ -112,7 +93,7 @@ const ProfileHome = () => {
             </h3>
             <div className="space-y-4">
               {bookings
-                .filter((booking) => booking.status === "Upcoming")
+                .filter((booking) => booking.status === "Pending")
                 .map((booking) => (
                   <div
                     key={booking.id}
@@ -123,14 +104,14 @@ const ProfileHome = () => {
                         {booking.hotel}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Check-in: {booking.checkIn}
+                        Check-in: {booking.startDate}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Check-out: {booking.checkOut}
+                        Check-out: {booking.endDate}
                       </p>
                     </div>
-                    <span className="text-sm font-medium text-yellow-500">
-                      Upcoming
+                    <span className="text-sm font-medium text-yellow-600">
+                      {booking.status}
                     </span>
                   </div>
                 ))}
@@ -143,7 +124,9 @@ const ProfileHome = () => {
               Booking History
             </h3>
             <div className="space-y-4">
-              {bookings.map((booking) => (
+            {bookings
+                .filter((booking) => booking.status !== "Pending")
+                .map((booking) => (
                 <div
                   key={booking.id}
                   className="bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center"
@@ -153,17 +136,17 @@ const ProfileHome = () => {
                       {booking.hotel}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Check-in: {booking.checkIn}
+                      Check-in: {booking.startDate}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Check-out: {booking.checkOut}
+                      Check-out: {booking.endDate}
                     </p>
                   </div>
                   <span
                     className={`text-sm font-medium ${
-                      booking.status === "Completed"
+                      booking.status === "Confirmed"
                         ? "text-green-600"
-                        : "text-yellow-500"
+                        : "text-red-500"
                     }`}
                   >
                     {booking.status}
@@ -187,7 +170,7 @@ const ProfileHome = () => {
                   <p className="text-lg font-medium text-gray-700">
                     {review.hotel}
                   </p>
-                  <p className="text-sm text-gray-500">{review.comment}</p>
+                  <p className="text-sm text-gray-500">{review.review}</p>
                   <div className="flex items-center mt-2">
                     {[...Array(5)].map((_, i) => (
                       <svg
@@ -195,7 +178,7 @@ const ProfileHome = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
                         height="20"
-                        fill={i < review.rating ? "yellow" : "gray"}
+                        fill={i < review.rating ? "green" : "gray"}
                         viewBox="0 0 20 20"
                       >
                         <path d="M10 15l-5 3 1-5-4-4 5-1L10 0l2 6 5 1-4 4 1 5-5-3z" />

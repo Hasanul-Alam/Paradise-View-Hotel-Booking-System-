@@ -51,7 +51,7 @@ export default function Navbar() {
     if (response.data) {
       const user = response.data[0];
       dispatch(loginSuccess(user));
-      console.log(user);
+      
     }
     else{
       dispatch(loadingEnd());

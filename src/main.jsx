@@ -22,6 +22,7 @@ import AdminHome from "./components/admin/AdminHome/AdminHome";
 import Users from "./components/admin/Users/Users";
 import ManageRooms from "./components/admin/ManageRooms/ManageRooms";
 import ManageBookings from "./components/admin/ManageBookings/ManageBookings";
+import AdminRoute from "./components/routes/AdminRoute/Adminroute";
 
 const router = createBrowserRouter([
   {
@@ -47,7 +48,11 @@ const router = createBrowserRouter([
   // Admin Routes Starts Here....
   {
     path: "/admin",
-    element: <Admin />,
+    element: (
+      <AdminRoute>
+        <Admin />
+      </AdminRoute>
+    ),
     children: [
       {
         path: "/admin",
@@ -65,7 +70,7 @@ const router = createBrowserRouter([
         path: "manage-bookings",
         element: <ManageBookings />,
       },
-    ]
+    ],
   },
   // Admin Routes Ends Here....
   {

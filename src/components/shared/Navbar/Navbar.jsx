@@ -10,6 +10,7 @@ import {
   registrationStart,
   registrationSuccess,
   loadingStart,
+  loadingEnd,
 } from "../../../features/auth/authSlice";
 import { signInWithEmailAndPassword } from "firebase/auth/cordova";
 import { auth } from "../../../firebase/firebase.config";
@@ -57,6 +58,9 @@ export default function Navbar() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         getUserDataFromDatabase(user.email);
+      }
+      else{
+        dispatch(loadingEnd())
       }
     });
     return unsubscribe;
